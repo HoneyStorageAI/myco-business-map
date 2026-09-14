@@ -15,7 +15,7 @@
     --client-dim: #eef0fe;
     --support:    #0f766e;
     --support-dim:#e6f4f1;
-    --gap:        #d97706;
+    --focus:      #d97706;
   }
   * { box-sizing: border-box; }
 
@@ -28,7 +28,7 @@
     -webkit-font-smoothing: antialiased;
   }
   .wrap { max-width: 1640px; margin: 0 auto; transition: padding-right .18s ease; }
-  body.drawer-open .wrap { padding-right: 420px; }
+  body.drawer-open .wrap { padding-right: 440px; }
 
   h1 { font-size: 27px; font-weight: 600; letter-spacing: -.025em; margin: 0 0 6px; }
   .hint { font-size: 13px; color: var(--muted); margin: 0 0 22px; }
@@ -46,11 +46,12 @@
   .panel { display: none; }
   .panel.active { display: block; }
 
-  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 26px; font-size: 12.5px; color: var(--body); }
+  .legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 26px; font-size: 12.5px; color: var(--body); }
   .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
-  .legend .l-live { background: var(--client); }
-  .legend .l-dorm { background: #b7bdc7; }
-  .legend .l-gap  { background: var(--gap); }
+  .legend .l-live  { background: var(--client); }
+  .legend .l-focus { background: var(--focus); }
+  .legend .l-dorm  { background: #b7bdc7; }
+  .legend .l-out   { background: #fff; border: 1px dashed #b7bdc7; }
 
   section { margin-bottom: 46px; }
   section:last-child { margin-bottom: 0; }
@@ -71,7 +72,7 @@
   .head {
     position: relative; padding: 12px 8px; border-radius: 7px; text-align: center;
     font-size: 14px; font-weight: 600; letter-spacing: -.005em; color: #fff;
-    cursor: pointer; transition: filter .12s ease, transform .12s ease;
+    cursor: pointer; transition: filter .12s ease;
   }
   .client .head  { background: var(--client); box-shadow: 0 1px 2px rgba(79,70,229,.28); }
   .support .head { background: var(--support); box-shadow: 0 1px 2px rgba(15,118,110,.26); }
@@ -97,26 +98,30 @@
 
   /* level-3 states */
   .head.dormant { background: #b7bdc7; box-shadow: none; }
-  .head.gap     { background: var(--gap); box-shadow: 0 1px 2px rgba(217,119,6,.28); }
+  .head.focus   { background: var(--focus); box-shadow: 0 1px 2px rgba(217,119,6,.3); }
   .sub.dormant  { background: #f2f4f7; color: #9aa2ae; border-left-color: #dfe3e8 !important; box-shadow: none; }
-  .sub.gap      { background: #fffaf2; border-left-color: var(--gap) !important; color: #92400e; }
+  .sub.focus    { background: #fffaf2; border-left-color: var(--focus) !important; color: #92400e; font-weight: 500; }
+  .sub.out      { background: #fff; border: 1px dashed #cbd1d9; border-left: 3px dashed #cbd1d9 !important; color: #9aa2ae; box-shadow: none; }
 
   /* drawer */
   #drawer {
-    position: fixed; top: 0; right: 0; bottom: 0; width: 400px;
+    position: fixed; top: 0; right: 0; bottom: 0; width: 420px;
     background: #fff; border-left: 1px solid var(--hairline);
     box-shadow: -6px 0 24px rgba(16,24,40,.07);
-    padding: 26px 26px 30px; overflow-y: auto;
+    padding: 26px 26px 44px; overflow-y: auto;
     transform: translateX(100%); transition: transform .18s ease; z-index: 20;
   }
   #drawer.open { transform: translateX(0); }
-  #drawer .crumb { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding-right: 30px; }
-  #drawer h3 { font-size: 19px; margin: 0 0 14px; font-weight: 600; letter-spacing: -.015em; padding-right: 30px; }
-  #drawer .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-bottom: 14px; }
-  #drawer .badge.live    { background: var(--client-dim); color: var(--client); }
+  #drawer .crumb { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding-right: 34px; }
+  #drawer h3 { font-size: 19px; margin: 0 0 12px; font-weight: 600; letter-spacing: -.015em; padding-right: 34px; }
+  #drawer .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-bottom: 13px; }
   #drawer .badge.dormant { background: #f2f4f7; color: #667085; }
-  #drawer .badge.gap     { background: #fef3e2; color: var(--gap); }
+  #drawer .badge.focus   { background: #fef3e2; color: var(--focus); }
+  #drawer .badge.out     { background: #f2f4f7; color: #667085; }
   #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
+  #drawer .qlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 20px 0 10px; }
+  #drawer ul.qlist { margin: 0; padding-left: 18px; }
+  #drawer ul.qlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 9px; }
   #drawer .x {
     position: absolute; top: 20px; right: 20px; width: 28px; height: 28px;
     border: 0; background: #f2f4f7; border-radius: 6px; cursor: pointer;
@@ -141,7 +146,7 @@
 <div class="wrap">
 
   <h1>The Myco Business Map</h1>
-  <p class="hint">Click any box for what matters about it.</p>
+  <p class="hint">Click any box for what it means and the questions worth asking.</p>
 
   <div class="tabs">
     <button class="tab active" data-panel="general">General</button>
@@ -323,7 +328,7 @@
           <div class="sub" data-note="Right people, right hours, no gaps. Usually the biggest variable cost of the event.">Staff the day</div>
           <div class="sub" data-note="Hours of work before guests arrive, against a fixed clock that cannot move.">Setup</div>
           <div class="sub" data-note="Live problem-solving. Nothing here can be rescheduled or done again tomorrow.">Run the event</div>
-          <div class="sub" data-note="Clearing and resetting, often overnight, ready for whatever is booked next.">Teardown</div>
+          <div class="sub" data-note="Breaking down tables, chairs, linens and decor once guests leave, clearing rubbish and cleaning the space. Usually done the same night or early next morning, because another booking may be in the following day.">Teardown</div>
         </div>
 
         <div class="col">
@@ -341,7 +346,7 @@
           <div class="sub" data-note="Wedding reviews drive future bookings more than ads do. Ask within days, not weeks.">Ask for review</div>
           <div class="sub" data-note="Each event produces next year's marketing material, provided permission is agreed up front.">Photos as marketing content</div>
           <div class="sub" data-note="A yearly reason to be remembered, at no cost, from people who already loved the place.">Anniversary messages</div>
-          <div class="sub" data-note="Over a hundred prospects attend every wedding. Almost no venue captures a single one of them.">Guests as future leads</div>
+          <div class="sub" data-note="Over a hundred prospects attend every wedding. Capturing them requires real consent — an opt-in at the event, not a harvested guest list.">Guests as future leads</div>
         </div>
 
       </div>
@@ -411,9 +416,10 @@
   <div class="panel" id="vignette">
 
     <div class="legend">
+      <span><i class="l-focus"></i>Focus now — what we build first</span>
       <span><i class="l-live"></i>Live today</span>
       <span><i class="l-dorm"></i>Dormant — paused by the venue sale</span>
-      <span><i class="l-gap"></i>Gap — Jose says it should happen and it doesn't</span>
+      <span><i class="l-out"></i>Deliberately out of scope</span>
     </div>
 
     <section>
@@ -424,77 +430,161 @@
       <div class="row client" style="--n:8">
 
         <div class="col">
-          <div class="head dormant" data-state="dormant" data-note="Paused. With no venue to show, there is very little to market. The ten-year reputation is the asset that survives the move.">Awareness</div>
-          <div class="sub dormant" data-state="dormant" data-note="Still live, but showing a property that has been sold. Not confirmed what it says now — worth asking Jose.">Website and photo gallery</div>
-          <div class="sub dormant" data-state="dormant" data-note="Not confirmed whether posting continues during the relocation. Ask Jose.">Instagram and Pinterest</div>
-          <div class="sub dormant" data-state="dormant" data-note="Possibly still being paid for while no date can be sold. Worth checking with Jose.">Venue directories</div>
-          <div class="sub dormant" data-state="dormant" data-note="No ad analytics exist today. Jose named marketing ROI as something he wants and cannot currently see.">Ads</div>
-          <div class="sub" data-note="Ten years of Miami reputation. This is the main asset that survives the sale of the property.">Reviews and reputation</div>
-          <div class="sub" data-note="Ten years of Miami vendor and planner relationships. Probably the fastest route back to leads once a new venue exists.">Planner and vendor referrals</div>
+          <div class="head dormant" data-state="dormant"
+            data-note="Paused. With no venue to show, there is very little to market. The ten-year reputation is the asset that survives the move."
+            data-questions="Is the website still advertising the venue that was sold?|What happens to the Vignette brand at a new venue — same name, same reviews?|Are you still paying for anything you can't currently sell against?">Awareness</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Still live, but showing a property that has been sold."
+            data-questions="What does the site say right now about the move?|Do you want it collecting enquiries for the next venue before it opens?">Website and photo gallery</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Not confirmed whether posting continues during the relocation."
+            data-questions="Are you still posting?|Is anyone asking publicly where the venue went?|Who runs the accounts — you, Luisa, someone else?">Instagram and Pinterest</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Possibly still being paid for while no date can be sold."
+            data-questions="Which directories were you listed on?|Are any still being charged?|Which one actually produced bookings?">Venue directories</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="No ad analytics exist today. Jose named marketing ROI as something he wants and cannot currently see."
+            data-questions="Were you running ads before the sale, and where?|Roughly what did you spend a month?|Did you ever know what one booking cost you in ad spend?">Ads</div>
+          <div class="sub"
+            data-note="Ten years of Miami reputation. The main asset that survives the sale of the property."
+            data-questions="Where do the ten years of reviews live — Google, The Knot, WeddingWire?|Do those reviews follow you to a new venue, or start again?|Do you ever ask for reviews, or do they just appear?">Reviews and reputation</div>
+          <div class="sub"
+            data-note="Ten years of vendor and planner relationships. Probably the fastest route back to leads once a new venue exists."
+            data-questions="Which planners or vendors sent you the most work?|Is that list written down anywhere?|Are you keeping those relationships warm during the move?">Planner and vendor referrals</div>
         </div>
 
         <div class="col">
-          <div class="head dormant" data-state="dormant" data-note="No new leads at all right now. GoHighLevel handled intake and has been paused since the sale.">Enquiry</div>
-          <div class="sub dormant" data-state="dormant" data-note="Was handled by GoHighLevel. Paused.">Capture the enquiry</div>
-          <div class="sub dormant" data-state="dormant" data-note="GoHighLevel ran an AI-assisted first response. Paused with the rest of the funnel.">Reply fast</div>
+          <div class="head dormant" data-state="dormant"
+            data-note="No new leads at all right now. GoHighLevel handled intake and has been paused since the sale."
+            data-questions="When you get a new venue, do you restart GoHighLevel or move intake into Myco?|What did GoHighLevel do well that we'd need to match?">Enquiry</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Was handled by GoHighLevel. Paused."
+            data-questions="Where did enquiries actually arrive from — directories, site form, DM, phone?|Which source produced the best couples?">Capture the enquiry</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="GoHighLevel ran an AI-assisted first response. Paused with the rest of the funnel."
+            data-questions="How fast were you replying before?|Did the AI reply well, or did you have to fix it?|What did it get wrong?">Reply fast</div>
           <div class="sub dormant" data-state="dormant" data-note="There is no date inventory to check while the business is between venues.">Check the date is free</div>
-          <div class="sub dormant" data-state="dormant" data-note="Qualification ran through GoHighLevel and then Luisa. Paused.">Qualify: date, guest count, budget</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Qualification ran through GoHighLevel and then Luisa. Paused."
+            data-questions="What made an enquiry worth a tour, and what made you pass?">Qualify: date, guest count, budget</div>
           <div class="sub dormant" data-state="dormant" data-note="Nothing to tour.">Book the tour</div>
         </div>
 
         <div class="col">
-          <div class="head dormant" data-state="dormant" data-note="Dormant until a new property is secured. This is the stage Jose most wants to rebuild properly when it restarts.">Tour</div>
-          <div class="sub dormant" data-state="dormant" data-note="Jose cited a tour that started 40 minutes late as exactly the kind of failure he wants flagged to him.">Confirm and remind</div>
+          <div class="head dormant" data-state="dormant"
+            data-note="Dormant until a new property is secured. This is the stage Jose most wants rebuilt properly when it restarts."
+            data-questions="When tours restart, should Myco own booking, reminding and following up?|How many tours a week did you run at your peak?">Tour</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Jose cited a tour that started 40 minutes late as exactly the kind of failure he wants flagged."
+            data-questions="How often did couples no-show?|What reminder did you send, if any?|Tell us about the 40-minute-late tour — how did you find out?">Confirm and remind</div>
           <div class="sub dormant" data-state="dormant" data-note="Jose personally ran tours. Restarts with a new venue.">Run the tour</div>
-          <div class="sub dormant" data-state="dormant" data-note="Jose's brief is explicit: with no outcome recorded, the follow-up dies. There is no system for this today.">Record the outcome</div>
-          <div class="sub dormant" data-state="dormant" data-note="Named by Jose as a specific gap — 'did you receive the package, do you have questions'.">Follow up within 24 hours</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Jose's brief is explicit: with no outcome recorded, the follow-up dies. There is no system for this today."
+            data-questions="Did you record tour outcomes anywhere, or was it in your head?|What would you want captured after every single tour?|Who would fill it in — you or a salesperson?">Record the outcome</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="Named by Jose as a specific gap — 'did you receive the package, do you have questions'."
+            data-questions="What did you send after a tour?|Who wrote it — you, or a template?|How many times would you follow up before giving up?">Follow up within 24 hours</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable while there is no calendar to hold.">Soft-hold the date</div>
         </div>
 
         <div class="col">
-          <div class="head dormant" data-state="dormant" data-note="No new bookings are being taken. All 11 live weddings were booked before the property sold.">Booked</div>
-          <div class="sub dormant" data-state="dormant" data-note="HoneyBook is the contract and payment tool. Luisa runs it day to day.">Send the proposal</div>
-          <div class="sub gap" data-state="gap" data-note="Promised to Jose as part of the first milestone: flag proposals sent with no response. Not happening today, and not yet confirmed as buildable.">Chase unanswered proposals</div>
+          <div class="head dormant" data-state="dormant"
+            data-note="No new bookings are being taken. All 11 live weddings were booked before the property sold."
+            data-questions="When bookings restart, should they stay in HoneyBook?|What does a Vignette contract include today?">Booked</div>
+          <div class="sub dormant" data-state="dormant"
+            data-note="HoneyBook is the contract and payment tool. Luisa runs it day to day."
+            data-questions="Who builds proposals — you or Luisa?|Are they templated, or written from scratch each time?">Send the proposal</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Promised to Jose as part of the first milestone: flag proposals sent with no response. Not happening today."
+            data-questions="Where do proposals live — all in HoneyBook, or are some sent by email?|Can you see in HoneyBook whether a proposal was opened, or only whether it was signed?|After how many days of silence should it be flagged — 3, 7, 14?|Should it be flagged to you, to Luisa, or both?|Should the system chase the couple directly, or only tell you?|If it chases, do you want to approve the wording each time or once?|How many chases before we stop?|Is there a backlog of old unanswered proposals worth looking at right now?">Chase unanswered proposals</div>
           <div class="sub dormant" data-state="dormant" data-note="HoneyBook. Active for existing bookings only.">Contract and deposit</div>
           <div class="sub dormant" data-state="dormant" data-note="No venue calendar to block.">Block the date</div>
-          <div class="sub gap" data-state="gap" data-note="Jose's brief requires ownership to move to Luisa automatically at Booked. Today the hand-off is informal.">Hand off to the planner</div>
+          <div class="sub"
+            data-note="Jose's brief requires ownership to move to Luisa automatically at Booked. Today the hand-off is informal. A real gap, but hard to test with no new bookings."
+            data-questions="What exactly does Luisa need to receive at hand-off?|What gets lost today when a booking moves to her?|Should Myco do this automatically when a contract is signed?|Does the couple get told that Luisa is now their person?">Hand off to the planner</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Where the entire business currently sits. 11 weddings being planned and delivered at third-party venues over the next year.">Plan</div>
-          <div class="sub" data-note="Luisa runs these. Jose has limited visibility into what is discussed or decided.">Planning meetings</div>
-          <div class="sub gap" data-state="gap" data-note="Jose's own example: '3 months to your big day'. Nothing proactive happens today. This is the clearest first thing Myco can do.">Milestone check-ins</div>
-          <div class="sub" data-note="Held by Luisa, mostly in HoneyBook. Not confirmed how structured it is — ask Jose or Luisa.">Collect guest count, layout, timeline</div>
-          <div class="sub" data-note="Harder than before: every wedding is now at a different third-party venue with its own rules and contacts.">Coordinate outside vendors</div>
-          <div class="sub" data-note="HoneyBook sends standard payment-due notifications. This is the only automation actually live today.">Payment instalments</div>
-          <div class="sub" data-note="Already happened at scale — 3 to 4 of the original 15 weddings were refunded after the sale.">Date changes and cancellations</div>
+          <div class="head"
+            data-note="Where the entire business currently sits. 11 weddings being planned and delivered at third-party venues over the next year."
+            data-questions="Walk us through one of the 11 weddings end to end — what happens between now and the day?|Who does the couple actually talk to, you or Luisa?|What lives in HoneyBook for each wedding, and what is only in Luisa's head?|Which of the 11 is next, and when?">Plan</div>
+          <div class="sub"
+            data-note="Luisa runs these. Jose has limited visibility into what is discussed or decided."
+            data-questions="How many meetings per wedding, and roughly when?|Are they scheduled in advance or arranged ad hoc?|Do you ever see notes from them?">Planning meetings</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Jose's own example: '3 months to your big day'. Nothing proactive happens today. The clearest first thing Myco can do."
+            data-questions="What are the exact milestones you want — 12 months, 6, 3, 1 month, 1 week?|What should each one actually say?|Which of them need something back from the couple — headcount, menu, timeline, payment?|Where does the event date live so we can count backwards from it — HoneyBook?|Should these come from you, from Luisa, or from 'Vignette Gardens'?|SMS, email or WhatsApp — which do your couples actually reply to?|What happens if they don't reply — chase again, or tell Luisa?|Should the message be different for an off-site wedding at a third-party venue?|Do you want to approve each one, or approve the template once?">Milestone check-ins</div>
+          <div class="sub"
+            data-note="Held by Luisa, mostly in HoneyBook. Not confirmed how structured it is."
+            data-questions="Where is guest count stored today?|When does it usually become final?|Which details are always chased late?|Is there a checklist per wedding, or is it from memory?">Collect guest count, layout, timeline</div>
+          <div class="sub"
+            data-note="Harder than before: every wedding is now at a different third-party venue with its own rules and contacts."
+            data-questions="Roughly how many vendors per wedding?|Do you contact them, or does the couple?|Does each host venue impose its own vendor rules?|What breaks most often in vendor coordination?">Coordinate outside vendors</div>
+          <div class="sub"
+            data-note="HoneyBook sends standard payment-due notifications. This is the only automation actually live today."
+            data-questions="What's the payment schedule — deposit, then what?|Does HoneyBook chase automatically, or does someone do it manually?|Have any of the 11 fallen behind?|Would you want to be told the moment one goes overdue?">Payment instalments</div>
+          <div class="sub"
+            data-note="Already happened at scale — 3 to 4 of the original 15 weddings were refunded after the sale."
+            data-questions="How did those refunds actually play out?|What does your contract say about a change of date?|Would you want to be alerted the moment a couple raises a change?">Date changes and cancellations</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Live, but off-site. Vignette is effectively the producer at someone else's venue rather than the host.">Event day</div>
-          <div class="sub" data-note="Not confirmed how this is tracked now that events are off-site. Ask Jose or Luisa.">Final headcount and run sheet</div>
-          <div class="sub" data-note="Not confirmed how staffing works for off-site events. Ask Jose.">Staff the day</div>
-          <div class="sub" data-note="Now constrained by each host venue's access times rather than their own.">Setup</div>
-          <div class="sub" data-note="Vignette still owns the client experience even though it no longer owns the space.">Run the event</div>
-          <div class="sub" data-note="Governed by the host venue's rules.">Teardown</div>
+          <div class="head"
+            data-note="Live, but off-site. Vignette is effectively the producer at someone else's venue rather than the host."
+            data-questions="How different is running a wedding at someone else's venue?|How many of the 11 have already happened?|What's gone wrong at the off-site ones so far?">Event day</div>
+          <div class="sub"
+            data-note="Not confirmed how this is tracked now that events are off-site."
+            data-questions="Who builds the run sheet?|What format — document, spreadsheet, message thread?|How late do the numbers still move?">Final headcount and run sheet</div>
+          <div class="sub"
+            data-note="Not confirmed how staffing works for off-site events."
+            data-questions="Who works an event now — your own staff or the host venue's?|How far ahead do you know who's working?">Staff the day</div>
+          <div class="sub" data-note="Now constrained by each host venue's access times rather than their own."
+            data-questions="How much setup access do host venues give you?">Setup</div>
+          <div class="sub"
+            data-note="Vignette still owns the client experience even though it no longer owns the space."
+            data-questions="Are you personally at all 11?|Is Luisa?|Who is the couple's point of contact on the day?">Run the event</div>
+          <div class="sub"
+            data-note="Breaking down tables, chairs, linens and decor once guests leave, clearing rubbish and cleaning up. Usually the same night or early next morning."
+            data-questions="Who clears up now — your team or the host venue's?|Is that in the host venue's contract or yours?">Teardown</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Live. Contracts and payments run through HoneyBook, managed almost entirely by Luisa.">Settle</div>
-          <div class="sub" data-note="HoneyBook. Payment-due notifications are active — the one thing already automated.">Final balance</div>
-          <div class="sub" data-note="Likely the host venue's deposit rather than Vignette's now. Not confirmed.">Damage deposit return</div>
-          <div class="sub" data-note="Not confirmed how extras are billed for off-site events. Ask Jose.">Overtime and extras</div>
-          <div class="sub" data-note="Not confirmed. Ask Jose how vendor billing works now.">Vendor invoices</div>
+          <div class="head"
+            data-note="Live. Contracts and payments run through HoneyBook, managed almost entirely by Luisa."
+            data-questions="Is all money for the 11 weddings flowing through HoneyBook?|Is anything paid outside it — cash, bank transfer?|Do you see the money coming in, or does Luisa tell you?">Settle</div>
+          <div class="sub"
+            data-note="HoneyBook. Payment-due notifications are active — the one thing already automated."
+            data-questions="When is the balance due relative to the event?|Does anyone ever pay late?|Who notices when they do?">Final balance</div>
+          <div class="sub" data-note="Likely the host venue's deposit rather than Vignette's now."
+            data-questions="Do you still hold damage deposits, or does the host venue?">Damage deposit return</div>
+          <div class="sub" data-note="Not confirmed how extras are billed for off-site events."
+            data-questions="What gets added on the night, and who writes it down?|Have you ever forgotten to bill for something?">Overtime and extras</div>
+          <div class="sub" data-note="Not confirmed how vendor billing works now."
+            data-questions="Do you pay vendors and rebill the couple, or do they pay vendors directly?">Vendor invoices</div>
         </div>
 
         <div class="col">
-          <div class="head gap" data-state="gap" data-note="Jose's clearest and most repeated gap: 'the wedding day is not the end — we already earned that client'. Almost nothing happens here today.">Nurture</div>
-          <div class="sub gap" data-state="gap" data-note="Not happening systematically. One of the easiest things to turn on for the 11 live weddings.">Thank you and check in</div>
-          <div class="sub gap" data-state="gap" data-note="Jose's Lane B priority: anything negative should reach him directly rather than sit with the planner.">Ask for feedback</div>
-          <div class="sub gap" data-state="gap" data-note="Not happening systematically, despite reviews being the asset that survives the relocation.">Ask for review</div>
-          <div class="sub" data-note="Not confirmed whether event photos are collected from the third-party venues. Ask Jose.">Photos as marketing content</div>
-          <div class="sub gap" data-state="gap" data-note="Named by Jose alongside birthday messages as missing today.">Anniversary messages</div>
-          <div class="sub gap" data-state="gap" data-note="Not captured at all. Over a hundred guests per wedding, and no follow-up to any of them.">Guests as future leads</div>
+          <div class="head focus" data-state="focus"
+            data-note="Jose's clearest and most repeated gap: 'the wedding day is not the end — we already earned that client'. Almost nothing happens here today. This is milestone two."
+            data-questions="Which of the 11 weddings should we start with — all of them, or two or three as a pilot?|Should messages come from you, from Luisa, or from 'Vignette Gardens'?|SMS, email or WhatsApp — which do couples actually reply to?|Do you want to approve every message, or approve each template once?|What should never be automated, no matter how well it works?|How would you describe the way Vignette talks to a couple?|What other messages do you wish went out automatically that we haven't listed?|Which messages do you or Luisa end up retyping most often?">Nurture</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Not happening systematically. One of the easiest things to switch on for the 11 live weddings."
+            data-questions="How long after the event — same night, next day, a week?|Who signs it — you, Luisa, or the business?|Does it change if something went wrong on the day?|Is there anything you always want mentioned — photos coming, final invoice, next steps?|Have you sent one before that we should copy the tone from?">Thank you and check in</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Jose's Lane B priority: anything negative should reach him directly rather than sit with the planner."
+            data-questions="How soon after the wedding should we ask?|One open question, or a short set — and what exactly do you want to know?|What counts as negative enough that it must reach you rather than Luisa?|How fast do you want to hear about a bad one — instantly, same day, in a digest?|Should the system reply with an apology, or say nothing until you decide?|Has anyone complained after an event? What happened, and what should have happened?|Do you want to see the good ones too, or only the problems?">Ask for feedback</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Not happening systematically, despite reviews being the asset that survives the relocation."
+            data-questions="Which platform matters most — Google, The Knot, WeddingWire, Instagram?|Do you ask today at all, and if so when and how?|Should we only ask couples who gave positive feedback first?|A link, or a personal message from you?|Is there any incentive, or would that break the platform's rules?">Ask for review</div>
+          <div class="sub"
+            data-note="Not confirmed whether event photos are collected from the third-party venues."
+            data-questions="Do you get photos from each wedding?|Who owns them — you, the couple, or the photographer?|Is permission to use them in your contract?">Photos as marketing content</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Named by Jose alongside birthday messages as missing today. The biggest open data question of the two milestones."
+            data-questions="Where do you keep dates today — HoneyBook, a spreadsheet, or Luisa's head?|Do you have birthdays at all? For both partners, or just the lead contact?|Which dates do you want to mark — wedding anniversary, birthdays, engagement date?|How many years do you keep going — one, five, forever?|What should the message do — just warm wishes, or an offer like a vow renewal or a referral ask?|Are there any couples we must never message — a complaint, a split, a bereavement?|How would we even know that?">Anniversary messages</div>
+          <div class="sub out" data-state="out"
+            data-note="Deliberately out of scope. Guests never agreed to be contacted, so messaging them risks getting the sending number blocked and damages the Vignette name. Worth revisiting only as a genuine opt-in offered at the event itself."
+            data-questions="Is there any moment at a wedding where a guest willingly gives their details?|Would a venue-branded photo link with an opt-in be worth testing much later?">Guests as future leads</div>
         </div>
 
       </div>
@@ -508,52 +598,82 @@
       <div class="row support" style="--n:6">
 
         <div class="col">
-          <div class="head" data-note="Not discussed in detail on the kickoff call. Worth asking Jose who actually keeps the books.">Finance</div>
-          <div class="sub" data-note="Not confirmed who does this. Ask Jose.">Bookkeeping and expenses</div>
-          <div class="sub" data-note="Not confirmed. Ask Jose.">Taxes and filings</div>
-          <div class="sub" data-note="Real exposure: deposits are held for 11 future weddings while the business owns no venue of its own.">Cash held against future dates</div>
+          <div class="head"
+            data-note="Not discussed in detail on the kickoff call."
+            data-questions="Who keeps the books — you, Luisa, an accountant?|Do you have a live view of money in and out, or does it come from someone else?">Finance</div>
+          <div class="sub" data-note="Not confirmed who does this."
+            data-questions="What tool, if any?|Does anything sync from HoneyBook?">Bookkeeping and expenses</div>
+          <div class="sub" data-note="Not confirmed." data-questions="Who handles tax, and when does it become urgent?">Taxes and filings</div>
+          <div class="sub"
+            data-note="Real exposure: deposits are held for 11 future weddings while the business owns no venue of its own."
+            data-questions="How much of the money for the 11 weddings has already been collected?|Is it set aside, or has it been spent?|Does anything currently remind you what's still owed?">Cash held against future dates</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Luisa is part-time and runs most of the operation. Santi was also named on the kickoff call, role not confirmed.">Staffing</div>
-          <div class="sub" data-note="Not confirmed how staffing works now events are off-site. Ask Jose.">Hiring event staff</div>
-          <div class="sub" data-note="Not confirmed.">Onboarding and training</div>
-          <div class="sub" data-note="Not confirmed. Likely depends on each host venue.">Rostering each event</div>
-          <div class="sub" data-note="Not confirmed.">Payroll</div>
+          <div class="head"
+            data-note="Luisa is part-time and runs most of the operation. Santi was also named on the kickoff call, role not confirmed."
+            data-questions="Who is on the team right now — Luisa, Santi, anyone else?|How many hours a week is Luisa actually working?|What happens to the team while there is no venue?|Who should have access to Myco?">Staffing</div>
+          <div class="sub" data-note="Not confirmed how staffing works now events are off-site."
+            data-questions="Do you hire per event, or use the host venue's staff?">Hiring event staff</div>
+          <div class="sub" data-note="Not confirmed."
+            data-questions="Is anything written down about how Vignette does things?">Onboarding and training</div>
+          <div class="sub" data-note="Not confirmed. Likely depends on each host venue."
+            data-questions="How do you decide who works a wedding?">Rostering each event</div>
+          <div class="sub" data-note="Not confirmed."
+            data-questions="How are people paid — payroll, per event, invoice?">Payroll</div>
         </div>
 
         <div class="col">
-          <div class="head dormant" data-state="dormant" data-note="Sold, with no replacement secured yet. This entire area is on hold and is the reason the front of the funnel is dark.">The venue</div>
+          <div class="head dormant" data-state="dormant"
+            data-note="Sold, with no replacement secured yet. This entire area is on hold, and is the reason the front of the funnel is dark."
+            data-questions="What's the plan and timeline for a new venue?|Are you actively looking, or waiting?|Does anything about Myco change the day you sign a new property?">The venue</div>
           <div class="sub dormant" data-state="dormant" data-note="Gone with the sale of the property.">Grounds and building upkeep</div>
-          <div class="sub dormant" data-state="dormant" data-note="Not confirmed whether inventory was kept or sold with the property. Ask Jose.">Furniture, linens, AV</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not confirmed whether inventory was kept or sold with the property."
+            data-questions="Did you keep the furniture and equipment, or did it go with the sale?|Is it in storage costing money?">Furniture, linens, AV</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable while events are off-site.">Cleaning and turnaround</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable.">Repairs</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable.">Utilities</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Most site-specific risk has transferred to the host venues, but Vignette still carries producer-level obligations.">Compliance &amp; risk</div>
+          <div class="head"
+            data-note="Most site-specific risk has transferred to the host venues, but Vignette still carries producer-level obligations."
+            data-questions="What are you still legally on the hook for now that events are off-site?">Compliance &amp; risk</div>
           <div class="sub dormant" data-state="dormant" data-note="Now the host venue's responsibility rather than Vignette's.">Occupancy and fire limits</div>
-          <div class="sub" data-note="Not confirmed whether Vignette still holds a licence of its own. Ask Jose.">Liquor licence</div>
+          <div class="sub" data-note="Not confirmed whether Vignette still holds a licence of its own."
+            data-questions="Do you still hold a liquor licence, or does the host venue cover it?">Liquor licence</div>
           <div class="sub dormant" data-state="dormant" data-note="Set by each host venue.">Noise rules and curfew</div>
-          <div class="sub" data-note="Not confirmed, but likely still required while operating as the producer. Ask Jose.">Insurance</div>
-          <div class="sub" data-note="Not confirmed who collects these now that the host venue is also involved.">Vendor insurance certificates</div>
+          <div class="sub" data-note="Not confirmed, but likely still required while operating as the producer."
+            data-questions="What cover do you carry as the producer?|Do host venues require anything specific from you?">Insurance</div>
+          <div class="sub" data-note="Not confirmed who collects these now."
+            data-questions="Who collects vendor insurance certificates now — you or the host venue?">Vendor insurance certificates</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Ten years of Miami vendor relationships. Arguably Vignette's most durable asset right now, and entirely Jose's.">Vendor network</div>
-          <div class="sub" data-note="Exists, but not confirmed whether it is written down anywhere. Ask Jose.">Preferred vendor list</div>
-          <div class="sub" data-note="Jose's personal relationships, built over ten years. Strong, and not currently captured in any system.">Vendor relationships</div>
-          <div class="sub" data-note="Now involves new host venues as well as suppliers.">Vetting new vendors</div>
+          <div class="head"
+            data-note="Ten years of Miami vendor relationships. Arguably Vignette's most durable asset right now, and entirely Jose's."
+            data-questions="How many vendors do you work with regularly?|Is that list anywhere other than your phone and your memory?|Do you earn anything from referring work to them?|Would you want Myco to hold this list and remind you to stay in touch?">Vendor network</div>
+          <div class="sub" data-note="Exists, but not confirmed whether it is written down."
+            data-questions="Where does the preferred list live today?">Preferred vendor list</div>
+          <div class="sub" data-note="Jose's personal relationships, built over ten years. Not captured in any system."
+            data-questions="How do you keep them warm — calls, events, nothing in particular?|Which relationships matter most?">Vendor relationships</div>
+          <div class="sub" data-note="Now involves new host venues as well as suppliers."
+            data-questions="What makes you drop a vendor?">Vetting new vendors</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="Largely on hold commercially, but this is exactly the conversation Monday is for.">Growth &amp; strategy</div>
+          <div class="head"
+            data-note="Largely on hold commercially, but this is exactly the conversation Monday is for."
+            data-questions="What does a good next twelve months look like for Vignette?">Growth &amp; strategy</div>
+          <div class="sub focus" data-state="focus"
+            data-note="Milestone one: proactive venue health and question answering. What Jose sees without having to ask Luisa."
+            data-questions="What would make you open this twice a week rather than ignore it?|If you could only see three numbers on a Monday morning, what are they?|What do you check today, and where do you have to go to find it?|Which numbers do you currently have to ask Luisa for?|Do you want it pushed to you, or would you rather ask when you want to know?|How often — daily, twice a week, weekly? And at what time?|One digest, or separate alerts as things happen?|What counts as urgent enough to interrupt you, versus waiting for the digest?|Which of these should be flagged: unanswered proposals, overdue payments, weddings missing details, a couple with no contact for weeks, negative feedback?|How long without a reply on a proposal is too long?|How long without contact before a booked couple is being neglected?|Should an alert include a suggested action, or just tell you the fact?|Who else should receive these — Luisa, Santi, only you?">Reading the numbers</div>
           <div class="sub dormant" data-state="dormant" data-note="On hold until there is a venue and a calendar to price.">Pricing by date and season</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable with no dates to fill.">Filling off-peak dates</div>
           <div class="sub dormant" data-state="dormant" data-note="No inventory to measure occupancy against.">Occupancy and booking pace</div>
           <div class="sub dormant" data-state="dormant" data-note="On hold.">Packages and add-ons</div>
-          <div class="sub" data-note="The live question. Jose wants to use this period to rebuild how the business runs before the next venue opens.">Improving how things run</div>
+          <div class="sub" data-note="The live question. Jose wants to use this period to rebuild how the business runs before the next venue opens."
+            data-questions="What's the one process you'd most want fixed before the next venue opens?|What do you spend time on that you think you shouldn't?">Improving how things run</div>
         </div>
 
       </div>
@@ -568,6 +688,10 @@
   <h3></h3>
   <div class="badge-slot"></div>
   <p class="note"></p>
+  <div class="qwrap" hidden>
+    <div class="qlabel">Questions for Jose</div>
+    <ul class="qlist"></ul>
+  </div>
 </div>
 
 <script>
@@ -577,12 +701,11 @@
   var title  = drawer.querySelector('h3');
   var badges = drawer.querySelector('.badge-slot');
   var note   = drawer.querySelector('p.note');
+  var qwrap  = drawer.querySelector('.qwrap');
+  var qlist  = drawer.querySelector('ul.qlist');
   var current = null;
 
-  var STATE_TEXT = {
-    dormant: 'Dormant',
-    gap: 'Gap'
-  };
+  var STATE_TEXT = { dormant: 'Dormant', focus: 'Focus now', out: 'Out of scope' };
 
   function close() {
     drawer.classList.remove('open');
@@ -614,15 +737,26 @@
     }
 
     note.textContent = el.dataset.note || '';
+
+    qlist.innerHTML = '';
+    var qs = (el.dataset.questions || '').split('|').map(function (q) { return q.trim(); }).filter(Boolean);
+    qs.forEach(function (q) {
+      var li = document.createElement('li');
+      li.textContent = q;
+      qlist.appendChild(li);
+    });
+    qwrap.hidden = qs.length === 0;
+
     drawer.classList.add('open');
     document.body.classList.add('drawer-open');
+    drawer.scrollTop = 0;
   }
 
   document.addEventListener('click', function (e) {
     if (e.target.closest('#drawer .x')) { close(); return; }
     if (e.target.closest('#drawer')) return;
 
-    var box = e.target.closest('[data-note]');
+    var box = e.target.closest('[data-note], [data-questions]');
     if (box) { open(box); return; }
 
     var tab = e.target.closest('.tab');
