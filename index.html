@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Myco Business Map</title>
+<style>
+  :root {
+    --ink:        #101828;
+    --body:       #475467;
+    --muted:      #98a2b3;
+    --hairline:   #e4e7ec;
+    --page:       #f7f8fa;
+    --client:     #4f46e5;
+    --client-dim: #eef0fe;
+    --support:    #0f766e;
+    --support-dim:#e6f4f1;
+    --gap:        #d97706;
+  }
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    padding: 52px 40px 72px;
+    background: var(--page);
+    color: var(--ink);
+    font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1640px; margin: 0 auto; transition: padding-right .18s ease; }
+  body.drawer-open .wrap { padding-right: 420px; }
+
+  h1 { font-size: 27px; font-weight: 600; letter-spacing: -.025em; margin: 0 0 6px; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0 0 22px; }
+
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--hairline); margin-bottom: 30px; }
+  .tab {
+    appearance: none; background: none; border: 0; font: inherit;
+    font-size: 14px; font-weight: 500; color: var(--muted);
+    padding: 9px 16px 11px; margin-bottom: -1px;
+    border-bottom: 2px solid transparent; cursor: pointer; transition: color .12s ease;
+  }
+  .tab:hover { color: var(--body); }
+  .tab.active { color: var(--client); border-bottom-color: var(--client); font-weight: 600; }
+
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .legend { display: flex; gap: 18px; flex-wrap: wrap; margin-bottom: 26px; font-size: 12.5px; color: var(--body); }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+  .legend .l-live { background: var(--client); }
+  .legend .l-dorm { background: #b7bdc7; }
+  .legend .l-gap  { background: var(--gap); }
+
+  section { margin-bottom: 46px; }
+  section:last-child { margin-bottom: 0; }
+
+  .sec-head { display: flex; align-items: center; gap: 11px; margin-bottom: 18px; }
+  .sec-head .pip { width: 9px; height: 9px; border-radius: 2px; flex: none; }
+  .client-scope .pip  { background: var(--client); }
+  .support-scope .pip { background: var(--support); }
+  .sec-head h2 { font-size: 12px; font-weight: 700; margin: 0; letter-spacing: .1em; text-transform: uppercase; }
+  .client-scope h2  { color: var(--client); }
+  .support-scope h2 { color: var(--support); }
+  .sec-head .note { font-size: 13px; color: var(--muted); }
+  .sec-head .line { flex: 1; height: 1px; background: var(--hairline); }
+
+  .row { display: grid; gap: 14px; align-items: start; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); }
+  .col { display: flex; flex-direction: column; gap: 6px; }
+
+  .head {
+    position: relative; padding: 12px 8px; border-radius: 7px; text-align: center;
+    font-size: 14px; font-weight: 600; letter-spacing: -.005em; color: #fff;
+    cursor: pointer; transition: filter .12s ease, transform .12s ease;
+  }
+  .client .head  { background: var(--client); box-shadow: 0 1px 2px rgba(79,70,229,.28); }
+  .support .head { background: var(--support); box-shadow: 0 1px 2px rgba(15,118,110,.26); }
+  .head:hover { filter: brightness(1.08); }
+  .head.sel { outline: 2px solid var(--ink); outline-offset: 2px; }
+
+  .client .col:not(:last-child) .head::after {
+    content: ""; position: absolute; right: -14px; top: 50%;
+    width: 0; height: 0; transform: translateY(-50%);
+    border-left: 6px solid #c6cbd5; border-top: 5px solid transparent; border-bottom: 5px solid transparent;
+  }
+
+  .sub {
+    background: #fff; border: 1px solid var(--hairline); border-radius: 6px;
+    padding: 8px 10px; font-size: 12.5px; line-height: 1.35; color: var(--body);
+    box-shadow: 0 1px 2px rgba(16,24,40,.04);
+    cursor: pointer; transition: border-color .12s ease, box-shadow .12s ease;
+  }
+  .client .sub  { border-left: 3px solid var(--client-dim); }
+  .support .sub { border-left: 3px solid var(--support-dim); }
+  .sub:hover { border-color: #c3c8d0; box-shadow: 0 2px 5px rgba(16,24,40,.07); }
+  .sub.sel { outline: 2px solid var(--ink); outline-offset: 1px; }
+
+  /* level-3 states */
+  .head.dormant { background: #b7bdc7; box-shadow: none; }
+  .head.gap     { background: var(--gap); box-shadow: 0 1px 2px rgba(217,119,6,.28); }
+  .sub.dormant  { background: #f2f4f7; color: #9aa2ae; border-left-color: #dfe3e8 !important; box-shadow: none; }
+  .sub.gap      { background: #fffaf2; border-left-color: var(--gap) !important; color: #92400e; }
+
+  /* drawer */
+  #drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: 400px;
+    background: #fff; border-left: 1px solid var(--hairline);
+    box-shadow: -6px 0 24px rgba(16,24,40,.07);
+    padding: 26px 26px 30px; overflow-y: auto;
+    transform: translateX(100%); transition: transform .18s ease; z-index: 20;
+  }
+  #drawer.open { transform: translateX(0); }
+  #drawer .crumb { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; padding-right: 30px; }
+  #drawer h3 { font-size: 19px; margin: 0 0 14px; font-weight: 600; letter-spacing: -.015em; padding-right: 30px; }
+  #drawer .badge { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; padding: 3px 8px; border-radius: 4px; margin-bottom: 14px; }
+  #drawer .badge.live    { background: var(--client-dim); color: var(--client); }
+  #drawer .badge.dormant { background: #f2f4f7; color: #667085; }
+  #drawer .badge.gap     { background: #fef3e2; color: var(--gap); }
+  #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
+  #drawer .x {
+    position: absolute; top: 20px; right: 20px; width: 28px; height: 28px;
+    border: 0; background: #f2f4f7; border-radius: 6px; cursor: pointer;
+    font-size: 16px; line-height: 1; color: var(--body);
+  }
+  #drawer .x:hover { background: #e4e7ec; }
+
+  @media (max-width: 1380px) {
+    .row { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .client .col:not(:last-child) .head::after { content: none; }
+    body.drawer-open .wrap { padding-right: 0; }
+  }
+  @media (max-width: 860px) {
+    body { padding: 32px 18px 48px; }
+    .row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #drawer { width: 100%; }
+  }
+  @media (max-width: 560px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>The Myco Business Map</h1>
+  <p class="hint">Click any box for what matters about it.</p>
+
+  <div class="tabs">
+    <button class="tab active" data-panel="general">General</button>
+    <button class="tab" data-panel="venues">Venues</button>
+    <button class="tab" data-panel="vignette">Vignette Gardens</button>
+  </div>
+
+  <!-- ═════════════ GENERAL ═════════════ -->
+  <div class="panel active" id="general">
+
+    <section>
+      <div class="sec-head client-scope">
+        <span class="pip"></span><h2>Client-based</h2>
+        <span class="note">Happens because a specific client exists</span><span class="line"></span>
+      </div>
+      <div class="row client" style="--n:6">
+
+        <div class="col">
+          <div class="head" data-note="Everything that makes the business findable before anyone gets in touch. No client is attached yet, but this decides how many ever arrive.">Awareness</div>
+          <div class="sub" data-note="Where most people decide whether to make contact at all. Directory listings often do more work than the site itself.">Website and listings</div>
+          <div class="sub" data-note="Ongoing proof the business is real and active. Eats time, and almost never measured.">Social content</div>
+          <div class="sub" data-note="The only lever that buys leads directly. Usually run without knowing the cost per booking.">Ads</div>
+          <div class="sub" data-note="The strongest buying signal a small business has. Mostly left to chance rather than asked for.">Reviews and reputation</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="From first contact to a booked next step. Speed matters far more than polish here.">Lead</div>
+          <div class="sub" data-note="Enquiries land in many places — form, phone, DM, WhatsApp, referral. Anything not captured is lost silently.">Capture the enquiry</div>
+          <div class="sub" data-note="Speed to first reply is the biggest single driver of win rate. Most enquiries go to whoever answers first.">Reply fast</div>
+          <div class="sub" data-note="Deciding whether this is worth pursuing: scope, budget, timing, distance. Skipping it wastes the most time.">Qualify the fit</div>
+          <div class="sub" data-note="A call, visit or consult. With no next step in the calendar, a lead goes cold by default.">Book the next step</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Turning interest into a signed commitment with money down. Nothing before this counts.">Booked</div>
+          <div class="sub" data-note="Turning a request into a number. Often inconsistent, because it is priced from memory rather than a rule.">Price and quote</div>
+          <div class="sub" data-note="The formal offer. Slow proposals lose to faster competitors more often than to cheaper ones.">Send the proposal</div>
+          <div class="sub" data-note="Sent and ignored is where most money leaks. Nobody owns the follow-up, so it quietly stops.">Chase unanswered proposals</div>
+          <div class="sub" data-note="The real conversion point. Until money moves, nothing is actually booked.">Contract and deposit</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Doing the work, plus all the coordination wrapped around it. Usually the only part the owner enjoys.">Deliver</div>
+          <div class="sub" data-note="Putting it in the calendar and deciding who does it. Conflicts and over-commitment surface here.">Schedule and assign</div>
+          <div class="sub" data-note="Details, materials, access, logistics. Information found late is the usual cause of a bad job.">Prep the job</div>
+          <div class="sub" data-note="Silence between booking and delivery is the main source of anxious clients and avoidable chase-up calls.">Keep the client updated</div>
+          <div class="sub" data-note="What the owner is genuinely good at, and the one part software cannot take over.">Do the work</div>
+          <div class="sub" data-note="Reschedules, scope changes, cancellations. They always arrive at the worst possible moment.">Handle changes</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Closing out the money. The part owners most often let slip, because the interesting work is already done.">Settle</div>
+          <div class="sub" data-note="Often delayed because the owner is tired once the job is finished. Every day of delay is a day of cash.">Send the final bill</div>
+          <div class="sub" data-note="Awkward, so it gets avoided. The most common cash-flow problem in small business.">Chase payment</div>
+          <div class="sub" data-note="Rare, but expensive in time and mood. Usually handled with no policy and no precedent.">Refunds and disputes</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Everything after the job is done. The cheapest revenue a business has, and the most commonly skipped.">Nurture</div>
+          <div class="sub" data-note="Costs nothing and is almost never done. The first move that turns a completed job into a relationship.">Thank you and check in</div>
+          <div class="sub" data-note="Private feedback catches problems while they can still be fixed, before they become a public review.">Ask for feedback</div>
+          <div class="sub" data-note="The highest-return five minutes in the business. It has to be asked for, and the timing matters.">Ask for review or referral</div>
+          <div class="sub" data-note="Planned contact long after the job. Keeps the business in mind for whenever the next need appears.">Milestone and anniversary messages</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head support-scope">
+        <span class="pip"></span><h2>Support-based</h2>
+        <span class="note">Happens whether or not a client exists</span><span class="line"></span>
+      </div>
+      <div class="row support" style="--n:5">
+
+        <div class="col">
+          <div class="head" data-note="Keeping the books straight and knowing what is actually in the bank. Not optional, rarely enjoyed.">Finance</div>
+          <div class="sub" data-note="Recording and categorising what came in and went out. Usually left until it is a pile.">Bookkeeping and expenses</div>
+          <div class="sub" data-note="Fixed deadlines and real penalties. Often outsourced, but still needs the owner to gather things.">Taxes and filings</div>
+          <div class="sub" data-note="Knowing what is genuinely available, not what is on paper. Profitable businesses still fail here.">Cash flow</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Everyone who is not the owner. Usually the first thing that breaks when the business grows.">Staffing</div>
+          <div class="sub" data-note="Finding people, almost always urgently and while already short-handed.">Hiring</div>
+          <div class="sub" data-note="How a new person learns to do it your way. Almost never written down anywhere.">Onboarding and training</div>
+          <div class="sub" data-note="Who works when. Breaks the moment somebody cancels.">Staff scheduling</div>
+          <div class="sub" data-note="Paying people correctly and on time. Deadline-driven, with no room for error.">Payroll</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="The physical and digital things the work depends on. Invisible until one of them fails.">Tools &amp; assets</div>
+          <div class="sub" data-note="The kit the work depends on. It fails at the worst possible time if maintenance is reactive.">Equipment and maintenance</div>
+          <div class="sub" data-note="Running out mid-job is expensive. Over-ordering quietly ties up cash.">Stock and supplies</div>
+          <div class="sub" data-note="Accumulates quietly month by month. Often still paid for long after it stopped being used.">Software and subscriptions</div>
+          <div class="sub" data-note="Rent, bills, cleaning, upkeep. A fixed cost that runs whether or not there is any work.">Premises and utilities</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Things that are invisible until they lapse, and then stop the business entirely.">Compliance &amp; risk</div>
+          <div class="sub" data-note="Permission to operate. Letting one lapse can stop the business overnight.">Licences and permits</div>
+          <div class="sub" data-note="Cover for when something goes wrong. Feels expensive until the day you needed it and did not have it.">Insurance</div>
+          <div class="sub" data-note="What was actually promised, in writing. Decides who pays when there is a dispute.">Contracts and terms</div>
+          <div class="sub" data-note="Legally required in most trades, and the first thing an insurer asks for after an incident.">Safety and certifications</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Working on the business rather than in it. Always the first thing dropped when the week gets busy.">Growth &amp; strategy</div>
+          <div class="sub" data-note="What you charge and how it is bundled. Most owners under-price and then rarely revisit it.">Pricing and packages</div>
+          <div class="sub" data-note="Knowing what is actually working. Usually a feeling rather than a figure.">Reading the numbers</div>
+          <div class="sub" data-note="Seasons, capacity, quiet periods. Without it, the calendar plans the owner instead.">Planning the year</div>
+          <div class="sub" data-note="Fixing the process instead of redoing the work. Permanently urgent-last.">Improving how things run</div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ═════════════ VENUES ═════════════ -->
+  <div class="panel" id="venues">
+
+    <section>
+      <div class="sec-head client-scope">
+        <span class="pip"></span><h2>Client-based</h2>
+        <span class="note">One date, one couple, booked 12 to 24 months ahead</span><span class="line"></span>
+      </div>
+      <div class="row client" style="--n:8">
+
+        <div class="col">
+          <div class="head" data-note="How couples find the venue, often more than a year before the date. Photos do most of the selling.">Awareness</div>
+          <div class="sub" data-note="Couples shortlist on photographs alone. For a venue, the gallery is the product.">Website and photo gallery</div>
+          <div class="sub" data-note="Where venues get discovered and saved months before anyone enquires.">Instagram and Pinterest</div>
+          <div class="sub" data-note="Paid listing sites where couples compare venues side by side. A major and measurable lead source.">Venue directories</div>
+          <div class="sub" data-note="Buys enquiries directly, but is rarely tracked all the way through to booked revenue.">Ads</div>
+          <div class="sub" data-note="A single bad review carries unusual weight when someone is choosing where to get married.">Reviews and reputation</div>
+          <div class="sub" data-note="Planners and vendors send repeat business. The highest-quality lead source a venue has.">Planner and vendor referrals</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="First contact. The first real question is always whether the date is free.">Enquiry</div>
+          <div class="sub" data-note="Arrives via directories, the website form, DM or phone. Several inboxes, easy to lose one.">Capture the enquiry</div>
+          <div class="sub" data-note="Couples enquire at several venues the same day. The first good answer usually wins the tour.">Reply fast — the date is the prize</div>
+          <div class="sub" data-note="Nothing else matters if the date is gone. It should be answered in the first reply, not the third.">Check the date is free</div>
+          <div class="sub" data-note="Date, guest count and budget decide whether this is real. Without them the tour is wasted.">Qualify: date, guest count, budget</div>
+          <div class="sub" data-note="The only goal of this stage. An enquiry with no tour booked is effectively a dead enquiry.">Book the tour</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="The site visit. For a venue this is where the booking is won or lost.">Tour</div>
+          <div class="sub" data-note="No-shows waste a staffed hour and a held slot. Reminders are the cheapest fix available.">Confirm and remind</div>
+          <div class="sub" data-note="Walking the space, answering questions, reading the couple. The owner's real skill.">Run the tour</div>
+          <div class="sub" data-note="What they liked, what worried them, how likely they are. With no outcome recorded, follow-up is guesswork.">Record the outcome</div>
+          <div class="sub" data-note="Couples decide quickly after touring several venues. After a few days you have been forgotten.">Follow up within 24 hours</div>
+          <div class="sub" data-note="A short courtesy hold creates urgency and protects the date. Needs an expiry or it clogs the calendar.">Soft-hold the date</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Contract, deposit, and the date coming off the market.">Booked</div>
+          <div class="sub" data-note="Package, date, price and terms. Should follow within a day of the tour, while it is still fresh.">Send the proposal</div>
+          <div class="sub" data-note="The single biggest leak in a venue pipeline. A quiet proposal is not a no.">Chase unanswered proposals</div>
+          <div class="sub" data-note="The moment it becomes real. Everything before this is reversible.">Contract and deposit</div>
+          <div class="sub" data-note="Taking the date out of sale. Double-booking a wedding is not recoverable.">Block the date</div>
+          <div class="sub" data-note="Ownership moves from whoever sold it to whoever will run it. Details get dropped in this gap.">Hand off to the planner</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="The long middle: 12 to 24 months of detail, meetings and instalments.">Plan</div>
+          <div class="sub" data-note="Scheduled sessions spread across a year. The main touchpoint with the couple.">Planning meetings</div>
+          <div class="sub" data-note="Proactive contact at fixed points before the date. Almost always missing, and badly missed.">Milestone check-ins</div>
+          <div class="sub" data-note="Details that arrive late and keep changing, yet drive staffing, layout and setup.">Collect guest count, layout, timeline</div>
+          <div class="sub" data-note="Caterer, florist, DJ, photographer. The venue is the hub even when it does not hire them.">Coordinate outside vendors</div>
+          <div class="sub" data-note="Money arrives in stages across months. A missed instalment is usually noticed far too late.">Payment instalments</div>
+          <div class="sub" data-note="Rare, high-stakes, and governed entirely by whatever the contract happened to say.">Date changes and cancellations</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="One day, no second chance, and the heaviest staffing of the whole cycle.">Event day</div>
+          <div class="sub" data-note="The final numbers, locked days before. Everything on the day depends on getting this right.">Final headcount and run sheet</div>
+          <div class="sub" data-note="Right people, right hours, no gaps. Usually the biggest variable cost of the event.">Staff the day</div>
+          <div class="sub" data-note="Hours of work before guests arrive, against a fixed clock that cannot move.">Setup</div>
+          <div class="sub" data-note="Live problem-solving. Nothing here can be rescheduled or done again tomorrow.">Run the event</div>
+          <div class="sub" data-note="Clearing and resetting, often overnight, ready for whatever is booked next.">Teardown</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Final money, and handing back whatever is owed.">Settle</div>
+          <div class="sub" data-note="Usually contractually due before the event, and often chased right up to the day itself.">Final balance</div>
+          <div class="sub" data-note="Held money that has to be inspected and returned. Forgetting it sours an otherwise good experience.">Damage deposit return</div>
+          <div class="sub" data-note="Bar spend, extra hours, late additions. Easy to under-bill because nobody wrote it down on the night.">Overtime and extras</div>
+          <div class="sub" data-note="What the venue owes out for that event, netted against what came in.">Vendor invoices</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="After the wedding. Every event is also a showroom for everyone who attended it.">Nurture</div>
+          <div class="sub" data-note="Sent while the day is still emotional. The highest chance of a warm reply you will ever get.">Thank you and check in</div>
+          <div class="sub" data-note="Ask privately first. It catches complaints before they land somewhere public and permanent.">Ask for feedback</div>
+          <div class="sub" data-note="Wedding reviews drive future bookings more than ads do. Ask within days, not weeks.">Ask for review</div>
+          <div class="sub" data-note="Each event produces next year's marketing material, provided permission is agreed up front.">Photos as marketing content</div>
+          <div class="sub" data-note="A yearly reason to be remembered, at no cost, from people who already loved the place.">Anniversary messages</div>
+          <div class="sub" data-note="Over a hundred prospects attend every wedding. Almost no venue captures a single one of them.">Guests as future leads</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head support-scope">
+        <span class="pip"></span><h2>Support-based</h2>
+        <span class="note">Happens whether or not a client exists</span><span class="line"></span>
+      </div>
+      <div class="row support" style="--n:6">
+
+        <div class="col">
+          <div class="head" data-note="Books, tax, and money that is held long before it is earned.">Finance</div>
+          <div class="sub" data-note="Recording and categorising what came in and went out.">Bookkeeping and expenses</div>
+          <div class="sub" data-note="Fixed deadlines and real penalties.">Taxes and filings</div>
+          <div class="sub" data-note="Deposits get spent long before the event happens. The classic venue cash trap.">Cash held against future dates</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Mostly event staff, rostered per date rather than per week.">Staffing</div>
+          <div class="sub" data-note="Casual and seasonal work, so there is constant churn.">Hiring event staff</div>
+          <div class="sub" data-note="Short-notice staff still represent the brand on somebody's wedding day.">Onboarding and training</div>
+          <div class="sub" data-note="Staffing is per date, not per week, and depends on a headcount that keeps moving.">Rostering each event</div>
+          <div class="sub" data-note="Often many small, irregular payments rather than a steady monthly run.">Payroll</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="The building and grounds. It is both the product and the biggest fixed cost.">The venue</div>
+          <div class="sub" data-note="Guests judge the space in photographs and in person. Upkeep is effectively marketing spend.">Grounds and building upkeep</div>
+          <div class="sub" data-note="Inventory that wears out, gets damaged, and has to be replaced on a cycle.">Furniture, linens, AV</div>
+          <div class="sub" data-note="Between events, sometimes overnight, with no slack if two dates are close together.">Cleaning and turnaround</div>
+          <div class="sub" data-note="Anything broken must be fixed before the next booked date, not whenever is convenient.">Repairs</div>
+          <div class="sub" data-note="Runs whether or not there is an event in the diary.">Utilities</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Site-specific rules that can shut an event down on the day.">Compliance &amp; risk</div>
+          <div class="sub" data-note="A hard legal cap on guest numbers. It decides which bookings can even be accepted.">Occupancy and fire limits</div>
+          <div class="sub" data-note="Often the difference between a viable and a non-viable event business.">Liquor licence</div>
+          <div class="sub" data-note="Local limits on when music has to stop. A common source of complaints and fines.">Noise rules and curfew</div>
+          <div class="sub" data-note="Public liability and event cover, usually required before a booking can be confirmed.">Insurance</div>
+          <div class="sub" data-note="Every outside vendor has to be covered. Collecting the certificates is admin nobody wants.">Vendor insurance certificates</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="The outside suppliers the venue trusts and recommends. Not triggered by any one client.">Vendor network</div>
+          <div class="sub" data-note="Who the venue recommends. It shapes the client's experience and can earn commission.">Preferred vendor list</div>
+          <div class="sub" data-note="Good vendors send couples back. Worth maintaining outside of any particular booking.">Vendor relationships</div>
+          <div class="sub" data-note="A bad vendor damages the venue's reputation, not just their own.">Vetting new vendors</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Filling the calendar at the right price. The core commercial question for a venue.">Growth &amp; strategy</div>
+          <div class="sub" data-note="A Saturday in peak season is a completely different product from a Tuesday in the quiet months.">Pricing by date and season</div>
+          <div class="sub" data-note="Empty dates cost the same to own. Midweek packages and discounting target exactly this.">Filling off-peak dates</div>
+          <div class="sub" data-note="How full next year is compared with this time last year. The key venue metric.">Occupancy and booking pace</div>
+          <div class="sub" data-note="Bundling raises value per booking without needing a single extra lead.">Packages and add-ons</div>
+          <div class="sub" data-note="Turnaround times, staffing ratios, standard run sheets.">Improving how things run</div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- ═════════════ VIGNETTE GARDENS ═════════════ -->
+  <div class="panel" id="vignette">
+
+    <div class="legend">
+      <span><i class="l-live"></i>Live today</span>
+      <span><i class="l-dorm"></i>Dormant — paused by the venue sale</span>
+      <span><i class="l-gap"></i>Gap — Jose says it should happen and it doesn't</span>
+    </div>
+
+    <section>
+      <div class="sec-head client-scope">
+        <span class="pip"></span><h2>Client-based</h2>
+        <span class="note">Venue sold, mid-relocation — 11 weddings still to deliver at third-party venues</span><span class="line"></span>
+      </div>
+      <div class="row client" style="--n:8">
+
+        <div class="col">
+          <div class="head dormant" data-state="dormant" data-note="Paused. With no venue to show, there is very little to market. The ten-year reputation is the asset that survives the move.">Awareness</div>
+          <div class="sub dormant" data-state="dormant" data-note="Still live, but showing a property that has been sold. Not confirmed what it says now — worth asking Jose.">Website and photo gallery</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not confirmed whether posting continues during the relocation. Ask Jose.">Instagram and Pinterest</div>
+          <div class="sub dormant" data-state="dormant" data-note="Possibly still being paid for while no date can be sold. Worth checking with Jose.">Venue directories</div>
+          <div class="sub dormant" data-state="dormant" data-note="No ad analytics exist today. Jose named marketing ROI as something he wants and cannot currently see.">Ads</div>
+          <div class="sub" data-note="Ten years of Miami reputation. This is the main asset that survives the sale of the property.">Reviews and reputation</div>
+          <div class="sub" data-note="Ten years of Miami vendor and planner relationships. Probably the fastest route back to leads once a new venue exists.">Planner and vendor referrals</div>
+        </div>
+
+        <div class="col">
+          <div class="head dormant" data-state="dormant" data-note="No new leads at all right now. GoHighLevel handled intake and has been paused since the sale.">Enquiry</div>
+          <div class="sub dormant" data-state="dormant" data-note="Was handled by GoHighLevel. Paused.">Capture the enquiry</div>
+          <div class="sub dormant" data-state="dormant" data-note="GoHighLevel ran an AI-assisted first response. Paused with the rest of the funnel.">Reply fast</div>
+          <div class="sub dormant" data-state="dormant" data-note="There is no date inventory to check while the business is between venues.">Check the date is free</div>
+          <div class="sub dormant" data-state="dormant" data-note="Qualification ran through GoHighLevel and then Luisa. Paused.">Qualify: date, guest count, budget</div>
+          <div class="sub dormant" data-state="dormant" data-note="Nothing to tour.">Book the tour</div>
+        </div>
+
+        <div class="col">
+          <div class="head dormant" data-state="dormant" data-note="Dormant until a new property is secured. This is the stage Jose most wants to rebuild properly when it restarts.">Tour</div>
+          <div class="sub dormant" data-state="dormant" data-note="Jose cited a tour that started 40 minutes late as exactly the kind of failure he wants flagged to him.">Confirm and remind</div>
+          <div class="sub dormant" data-state="dormant" data-note="Jose personally ran tours. Restarts with a new venue.">Run the tour</div>
+          <div class="sub dormant" data-state="dormant" data-note="Jose's brief is explicit: with no outcome recorded, the follow-up dies. There is no system for this today.">Record the outcome</div>
+          <div class="sub dormant" data-state="dormant" data-note="Named by Jose as a specific gap — 'did you receive the package, do you have questions'.">Follow up within 24 hours</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable while there is no calendar to hold.">Soft-hold the date</div>
+        </div>
+
+        <div class="col">
+          <div class="head dormant" data-state="dormant" data-note="No new bookings are being taken. All 11 live weddings were booked before the property sold.">Booked</div>
+          <div class="sub dormant" data-state="dormant" data-note="HoneyBook is the contract and payment tool. Luisa runs it day to day.">Send the proposal</div>
+          <div class="sub gap" data-state="gap" data-note="Promised to Jose as part of the first milestone: flag proposals sent with no response. Not happening today, and not yet confirmed as buildable.">Chase unanswered proposals</div>
+          <div class="sub dormant" data-state="dormant" data-note="HoneyBook. Active for existing bookings only.">Contract and deposit</div>
+          <div class="sub dormant" data-state="dormant" data-note="No venue calendar to block.">Block the date</div>
+          <div class="sub gap" data-state="gap" data-note="Jose's brief requires ownership to move to Luisa automatically at Booked. Today the hand-off is informal.">Hand off to the planner</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Where the entire business currently sits. 11 weddings being planned and delivered at third-party venues over the next year.">Plan</div>
+          <div class="sub" data-note="Luisa runs these. Jose has limited visibility into what is discussed or decided.">Planning meetings</div>
+          <div class="sub gap" data-state="gap" data-note="Jose's own example: '3 months to your big day'. Nothing proactive happens today. This is the clearest first thing Myco can do.">Milestone check-ins</div>
+          <div class="sub" data-note="Held by Luisa, mostly in HoneyBook. Not confirmed how structured it is — ask Jose or Luisa.">Collect guest count, layout, timeline</div>
+          <div class="sub" data-note="Harder than before: every wedding is now at a different third-party venue with its own rules and contacts.">Coordinate outside vendors</div>
+          <div class="sub" data-note="HoneyBook sends standard payment-due notifications. This is the only automation actually live today.">Payment instalments</div>
+          <div class="sub" data-note="Already happened at scale — 3 to 4 of the original 15 weddings were refunded after the sale.">Date changes and cancellations</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Live, but off-site. Vignette is effectively the producer at someone else's venue rather than the host.">Event day</div>
+          <div class="sub" data-note="Not confirmed how this is tracked now that events are off-site. Ask Jose or Luisa.">Final headcount and run sheet</div>
+          <div class="sub" data-note="Not confirmed how staffing works for off-site events. Ask Jose.">Staff the day</div>
+          <div class="sub" data-note="Now constrained by each host venue's access times rather than their own.">Setup</div>
+          <div class="sub" data-note="Vignette still owns the client experience even though it no longer owns the space.">Run the event</div>
+          <div class="sub" data-note="Governed by the host venue's rules.">Teardown</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Live. Contracts and payments run through HoneyBook, managed almost entirely by Luisa.">Settle</div>
+          <div class="sub" data-note="HoneyBook. Payment-due notifications are active — the one thing already automated.">Final balance</div>
+          <div class="sub" data-note="Likely the host venue's deposit rather than Vignette's now. Not confirmed.">Damage deposit return</div>
+          <div class="sub" data-note="Not confirmed how extras are billed for off-site events. Ask Jose.">Overtime and extras</div>
+          <div class="sub" data-note="Not confirmed. Ask Jose how vendor billing works now.">Vendor invoices</div>
+        </div>
+
+        <div class="col">
+          <div class="head gap" data-state="gap" data-note="Jose's clearest and most repeated gap: 'the wedding day is not the end — we already earned that client'. Almost nothing happens here today.">Nurture</div>
+          <div class="sub gap" data-state="gap" data-note="Not happening systematically. One of the easiest things to turn on for the 11 live weddings.">Thank you and check in</div>
+          <div class="sub gap" data-state="gap" data-note="Jose's Lane B priority: anything negative should reach him directly rather than sit with the planner.">Ask for feedback</div>
+          <div class="sub gap" data-state="gap" data-note="Not happening systematically, despite reviews being the asset that survives the relocation.">Ask for review</div>
+          <div class="sub" data-note="Not confirmed whether event photos are collected from the third-party venues. Ask Jose.">Photos as marketing content</div>
+          <div class="sub gap" data-state="gap" data-note="Named by Jose alongside birthday messages as missing today.">Anniversary messages</div>
+          <div class="sub gap" data-state="gap" data-note="Not captured at all. Over a hundred guests per wedding, and no follow-up to any of them.">Guests as future leads</div>
+        </div>
+
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-head support-scope">
+        <span class="pip"></span><h2>Support-based</h2>
+        <span class="note">Much of this is on hold until a new property is secured</span><span class="line"></span>
+      </div>
+      <div class="row support" style="--n:6">
+
+        <div class="col">
+          <div class="head" data-note="Not discussed in detail on the kickoff call. Worth asking Jose who actually keeps the books.">Finance</div>
+          <div class="sub" data-note="Not confirmed who does this. Ask Jose.">Bookkeeping and expenses</div>
+          <div class="sub" data-note="Not confirmed. Ask Jose.">Taxes and filings</div>
+          <div class="sub" data-note="Real exposure: deposits are held for 11 future weddings while the business owns no venue of its own.">Cash held against future dates</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Luisa is part-time and runs most of the operation. Santi was also named on the kickoff call, role not confirmed.">Staffing</div>
+          <div class="sub" data-note="Not confirmed how staffing works now events are off-site. Ask Jose.">Hiring event staff</div>
+          <div class="sub" data-note="Not confirmed.">Onboarding and training</div>
+          <div class="sub" data-note="Not confirmed. Likely depends on each host venue.">Rostering each event</div>
+          <div class="sub" data-note="Not confirmed.">Payroll</div>
+        </div>
+
+        <div class="col">
+          <div class="head dormant" data-state="dormant" data-note="Sold, with no replacement secured yet. This entire area is on hold and is the reason the front of the funnel is dark.">The venue</div>
+          <div class="sub dormant" data-state="dormant" data-note="Gone with the sale of the property.">Grounds and building upkeep</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not confirmed whether inventory was kept or sold with the property. Ask Jose.">Furniture, linens, AV</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable while events are off-site.">Cleaning and turnaround</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable.">Repairs</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable.">Utilities</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Most site-specific risk has transferred to the host venues, but Vignette still carries producer-level obligations.">Compliance &amp; risk</div>
+          <div class="sub dormant" data-state="dormant" data-note="Now the host venue's responsibility rather than Vignette's.">Occupancy and fire limits</div>
+          <div class="sub" data-note="Not confirmed whether Vignette still holds a licence of its own. Ask Jose.">Liquor licence</div>
+          <div class="sub dormant" data-state="dormant" data-note="Set by each host venue.">Noise rules and curfew</div>
+          <div class="sub" data-note="Not confirmed, but likely still required while operating as the producer. Ask Jose.">Insurance</div>
+          <div class="sub" data-note="Not confirmed who collects these now that the host venue is also involved.">Vendor insurance certificates</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Ten years of Miami vendor relationships. Arguably Vignette's most durable asset right now, and entirely Jose's.">Vendor network</div>
+          <div class="sub" data-note="Exists, but not confirmed whether it is written down anywhere. Ask Jose.">Preferred vendor list</div>
+          <div class="sub" data-note="Jose's personal relationships, built over ten years. Strong, and not currently captured in any system.">Vendor relationships</div>
+          <div class="sub" data-note="Now involves new host venues as well as suppliers.">Vetting new vendors</div>
+        </div>
+
+        <div class="col">
+          <div class="head" data-note="Largely on hold commercially, but this is exactly the conversation Monday is for.">Growth &amp; strategy</div>
+          <div class="sub dormant" data-state="dormant" data-note="On hold until there is a venue and a calendar to price.">Pricing by date and season</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable with no dates to fill.">Filling off-peak dates</div>
+          <div class="sub dormant" data-state="dormant" data-note="No inventory to measure occupancy against.">Occupancy and booking pace</div>
+          <div class="sub dormant" data-state="dormant" data-note="On hold.">Packages and add-ons</div>
+          <div class="sub" data-note="The live question. Jose wants to use this period to rebuild how the business runs before the next venue opens.">Improving how things run</div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<div id="drawer">
+  <button class="x" aria-label="Close">&times;</button>
+  <div class="crumb"></div>
+  <h3></h3>
+  <div class="badge-slot"></div>
+  <p class="note"></p>
+</div>
+
+<script>
+(function () {
+  var drawer = document.getElementById('drawer');
+  var crumb  = drawer.querySelector('.crumb');
+  var title  = drawer.querySelector('h3');
+  var badges = drawer.querySelector('.badge-slot');
+  var note   = drawer.querySelector('p.note');
+  var current = null;
+
+  var STATE_TEXT = {
+    dormant: 'Dormant',
+    gap: 'Gap'
+  };
+
+  function close() {
+    drawer.classList.remove('open');
+    document.body.classList.remove('drawer-open');
+    if (current) { current.classList.remove('sel'); current = null; }
+  }
+
+  function open(el) {
+    if (current) current.classList.remove('sel');
+    current = el;
+    el.classList.add('sel');
+
+    var section = el.closest('section');
+    var scope = section.querySelector('h2').textContent.trim();
+    var col = el.closest('.col');
+    var isHead = el.classList.contains('head');
+    var stage = col ? col.querySelector('.head').textContent.trim() : '';
+
+    crumb.textContent = isHead ? scope : scope + ' › ' + stage;
+    title.textContent = el.textContent.trim();
+
+    var state = el.dataset.state;
+    badges.innerHTML = '';
+    if (state && STATE_TEXT[state]) {
+      var b = document.createElement('span');
+      b.className = 'badge ' + state;
+      b.textContent = STATE_TEXT[state];
+      badges.appendChild(b);
+    }
+
+    note.textContent = el.dataset.note || '';
+    drawer.classList.add('open');
+    document.body.classList.add('drawer-open');
+  }
+
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('#drawer .x')) { close(); return; }
+    if (e.target.closest('#drawer')) return;
+
+    var box = e.target.closest('[data-note]');
+    if (box) { open(box); return; }
+
+    var tab = e.target.closest('.tab');
+    if (tab) {
+      document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('active'); });
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.panel).classList.add('active');
+      close();
+      return;
+    }
+
+    close();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
+</body>
+</html>
