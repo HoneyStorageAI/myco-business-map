@@ -120,6 +120,12 @@
   #drawer .badge.out     { background: #f2f4f7; color: #667085; }
   #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
   #drawer .qlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 20px 0 10px; }
+  #drawer p.opener { font-size: 14px; line-height: 1.55; font-weight: 600; color: var(--body); margin: 0; }
+  #drawer .wlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; }
+  #drawer ul.wlist { margin: 0; padding-left: 18px; }
+  #drawer ul.wlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 7px; }
+  #drawer ul.tlist { margin: 0; padding-left: 18px; }
+  #drawer ul.tlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 9px; }
   #drawer ul.qlist { margin: 0; padding-left: 18px; }
   #drawer ul.qlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 9px; }
   #drawer .x {
@@ -496,6 +502,8 @@
             data-questions="Who builds proposals — you or Luisa?|Are they templated, or written from scratch each time?">Send the proposal</div>
           <div class="sub focus" data-state="focus"
             data-note="Promised to Jose as part of the first milestone: flag proposals sent with no response. Not happening today."
+            data-opener="Walk us through your typical proposal process, start to finish."
+            data-watch="Where is the biggest drop off?|Where are the biggest points of friction?"
             data-questions="Where do proposals live — all in HoneyBook, or are some sent by email?|Can you see in HoneyBook whether a proposal was opened, or only whether it was signed?|After how many days of silence should it be flagged — 3, 7, 14?|Should it be flagged to you, to Luisa, or both?|Should the system chase the couple directly, or only tell you?|If it chases, do you want to approve the wording each time or once?|How many chases before we stop?|Is there a backlog of old unanswered proposals worth looking at right now?">Chase unanswered proposals</div>
           <div class="sub dormant" data-state="dormant" data-note="HoneyBook. Active for existing bookings only.">Contract and deposit</div>
           <div class="sub dormant" data-state="dormant" data-note="No venue calendar to block.">Block the date</div>
@@ -513,6 +521,8 @@
             data-questions="How many meetings per wedding, and roughly when?|Are they scheduled in advance or arranged ad hoc?|Do you ever see notes from them?">Planning meetings</div>
           <div class="sub focus" data-state="focus"
             data-note="Jose's own example: '3 months to your big day'. Nothing proactive happens today. The clearest first thing Myco can do."
+            data-opener="Walk us through a recent engagement from start to finish."
+            data-watch="Where are the milestones, and what does the couple get from each?|Where does each thing live?"
             data-questions="What are the exact milestones you want — 12 months, 6, 3, 1 month, 1 week?|What should each one actually say?|Which of them need something back from the couple — headcount, menu, timeline, payment?|Where does the event date live so we can count backwards from it — HoneyBook?|Should these come from you, from Luisa, or from 'Vignette Gardens'?|SMS, email or WhatsApp — which do your couples actually reply to?|What happens if they don't reply — chase again, or tell Luisa?|Should the message be different for an off-site wedding at a third-party venue?|Do you want to approve each one, or approve the template once?">Milestone check-ins</div>
           <div class="sub"
             data-note="Held by Luisa, mostly in HoneyBook. Not confirmed how structured it is."
@@ -569,19 +579,19 @@
             data-questions="Which of the 11 weddings should we start with — all of them, or two or three as a pilot?|Should messages come from you, from Luisa, or from 'Vignette Gardens'?|SMS, email or WhatsApp — which do couples actually reply to?|Do you want to approve every message, or approve each template once?|What should never be automated, no matter how well it works?|How would you describe the way Vignette talks to a couple?|What other messages do you wish went out automatically that we haven't listed?|Which messages do you or Luisa end up retyping most often?">Nurture</div>
           <div class="sub focus" data-state="focus"
             data-note="Not happening systematically. One of the easiest things to switch on for the 11 live weddings."
-            data-questions="How long after the event — same night, next day, a week?|Who signs it — you, Luisa, or the business?|Does it change if something went wrong on the day?|Is there anything you always want mentioned — photos coming, final invoice, next steps?|Have you sent one before that we should copy the tone from?">Thank you and check in</div>
+            data-questions="Which channel should this go out on: SMS, email or WhatsApp?|How long after the event — same night, next day, a week?|Who signs it — you, Luisa, or the business?|Does it change if something went wrong on the day?|Is there anything you always want mentioned — photos coming, final invoice, next steps?|Have you sent one before that we should copy the tone from?">Thank you and check in</div>
           <div class="sub focus" data-state="focus"
             data-note="Jose's Lane B priority: anything negative should reach him directly rather than sit with the planner."
-            data-questions="How soon after the wedding should we ask?|One open question, or a short set — and what exactly do you want to know?|What counts as negative enough that it must reach you rather than Luisa?|How fast do you want to hear about a bad one — instantly, same day, in a digest?|Should the system reply with an apology, or say nothing until you decide?|Has anyone complained after an event? What happened, and what should have happened?|Do you want to see the good ones too, or only the problems?">Ask for feedback</div>
+            data-questions="Which channel should this go out on: SMS, email or WhatsApp?|How soon after the wedding should we ask?|One open question, or a short set — and what exactly do you want to know?|What counts as negative enough that it must reach you rather than Luisa?|How fast do you want to hear about a bad one — instantly, same day, in a digest?|Should the system reply with an apology, or say nothing until you decide?|Has anyone complained after an event? What happened, and what should have happened?|Do you want to see the good ones too, or only the problems?">Ask for feedback</div>
           <div class="sub focus" data-state="focus"
             data-note="Not happening systematically, despite reviews being the asset that survives the relocation."
-            data-questions="Which platform matters most — Google, The Knot, WeddingWire, Instagram?|Do you ask today at all, and if so when and how?|Should we only ask couples who gave positive feedback first?|A link, or a personal message from you?|Is there any incentive, or would that break the platform's rules?">Ask for review</div>
+            data-questions="Which channel should this go out on: SMS, email or WhatsApp?|Which platform matters most — Google, The Knot, WeddingWire, Instagram?|Do you ask today at all, and if so when and how?|Should we only ask couples who gave positive feedback first?|A link, or a personal message from you?|Is there any incentive, or would that break the platform's rules?">Ask for review</div>
           <div class="sub"
             data-note="Not confirmed whether event photos are collected from the third-party venues."
             data-questions="Do you get photos from each wedding?|Who owns them — you, the couple, or the photographer?|Is permission to use them in your contract?">Photos as marketing content</div>
           <div class="sub focus" data-state="focus"
             data-note="Named by Jose alongside birthday messages as missing today. The biggest open data question of the two milestones."
-            data-questions="Where do you keep dates today — HoneyBook, a spreadsheet, or Luisa's head?|Do you have birthdays at all? For both partners, or just the lead contact?|Which dates do you want to mark — wedding anniversary, birthdays, engagement date?|How many years do you keep going — one, five, forever?|What should the message do — just warm wishes, or an offer like a vow renewal or a referral ask?|Are there any couples we must never message — a complaint, a split, a bereavement?|How would we even know that?">Anniversary messages</div>
+            data-questions="Which channel should this go out on: SMS, email or WhatsApp?|Do birthdays go out on the same channel as the anniversary note, or a different one?|Where do you keep dates today — HoneyBook, a spreadsheet, or Luisa's head?|Do you have birthdays at all? For both partners, or just the lead contact?|Which dates do you want to mark — wedding anniversary, birthdays, engagement date?|How many years do you keep going — one, five, forever?|What should the message do — just warm wishes, or an offer like a vow renewal or a referral ask?|Are there any couples we must never message — a complaint, a split, a bereavement?|How would we even know that?">Anniversary messages</div>
           <div class="sub out" data-state="out"
             data-note="Deliberately out of scope. Guests never agreed to be contacted, so messaging them risks getting the sending number blocked and damages the Vignette name. Worth revisiting only as a genuine opt-in offered at the event itself."
             data-questions="Is there any moment at a wedding where a guest willingly gives their details?|Would a venue-branded photo link with an opt-in be worth testing much later?">Guests as future leads</div>
@@ -667,6 +677,7 @@
             data-questions="What does a good next twelve months look like for Vignette?">Growth &amp; strategy</div>
           <div class="sub focus" data-state="focus"
             data-note="Milestone one: proactive venue health and question answering. What Jose sees without having to ask Luisa."
+            data-top="What are the most important goals for your business?|What are flags you are looking out for?|What numbers do you have access to now?|Does this give you the full picture?"
             data-questions="What would make you open this twice a week rather than ignore it?|If you could only see three numbers on a Monday morning, what are they?|What do you check today, and where do you have to go to find it?|Which numbers do you currently have to ask Luisa for?|Do you want it pushed to you, or would you rather ask when you want to know?|How often — daily, twice a week, weekly? And at what time?|One digest, or separate alerts as things happen?|What counts as urgent enough to interrupt you, versus waiting for the digest?|Which of these should be flagged: unanswered proposals, overdue payments, weddings missing details, a couple with no contact for weeks, negative feedback?|How long without a reply on a proposal is too long?|How long without contact before a booked couple is being neglected?|Should an alert include a suggested action, or just tell you the fact?|Who else should receive these — Luisa, Santi, only you?">Reading the numbers</div>
           <div class="sub dormant" data-state="dormant" data-note="On hold until there is a venue and a calendar to price.">Pricing by date and season</div>
           <div class="sub dormant" data-state="dormant" data-note="Not applicable with no dates to fill.">Filling off-peak dates</div>
@@ -688,6 +699,16 @@
   <h3></h3>
   <div class="badge-slot"></div>
   <p class="note"></p>
+  <div class="owrap" hidden>
+    <div class="qlabel">Open with</div>
+    <p class="opener"></p>
+    <div class="wlabel" hidden>Watch for</div>
+    <ul class="wlist"></ul>
+  </div>
+  <div class="twrap" hidden>
+    <div class="qlabel">Top questions</div>
+    <ul class="tlist"></ul>
+  </div>
   <div class="qwrap" hidden>
     <div class="qlabel">Questions for Jose</div>
     <ul class="qlist"></ul>
@@ -701,6 +722,12 @@
   var title  = drawer.querySelector('h3');
   var badges = drawer.querySelector('.badge-slot');
   var note   = drawer.querySelector('p.note');
+  var owrap  = drawer.querySelector('.owrap');
+  var opener = drawer.querySelector('p.opener');
+  var wlabel = drawer.querySelector('.wlabel');
+  var wlist  = drawer.querySelector('ul.wlist');
+  var twrap  = drawer.querySelector('.twrap');
+  var tlist  = drawer.querySelector('ul.tlist');
   var qwrap  = drawer.querySelector('.qwrap');
   var qlist  = drawer.querySelector('ul.qlist');
   var current = null;
@@ -738,6 +765,27 @@
 
     note.textContent = el.dataset.note || '';
 
+    var openerText = (el.dataset.opener || '').trim();
+    opener.textContent = openerText;
+    wlist.innerHTML = '';
+    var ws = (el.dataset.watch || '').split('|').map(function (w) { return w.trim(); }).filter(Boolean);
+    ws.forEach(function (w) {
+      var wi = document.createElement('li');
+      wi.textContent = w;
+      wlist.appendChild(wi);
+    });
+    wlabel.hidden = ws.length === 0;
+    owrap.hidden = !openerText && ws.length === 0;
+
+    tlist.innerHTML = '';
+    var ts = (el.dataset.top || '').split('|').map(function (t) { return t.trim(); }).filter(Boolean);
+    ts.forEach(function (t) {
+      var ti = document.createElement('li');
+      ti.textContent = t;
+      tlist.appendChild(ti);
+    });
+    twrap.hidden = ts.length === 0;
+
     qlist.innerHTML = '';
     var qs = (el.dataset.questions || '').split('|').map(function (q) { return q.trim(); }).filter(Boolean);
     qs.forEach(function (q) {
@@ -756,7 +804,7 @@
     if (e.target.closest('#drawer .x')) { close(); return; }
     if (e.target.closest('#drawer')) return;
 
-    var box = e.target.closest('[data-note], [data-questions]');
+    var box = e.target.closest('[data-note], [data-questions], [data-opener], [data-top]');
     if (box) { open(box); return; }
 
     var tab = e.target.closest('.tab');
