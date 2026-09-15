@@ -52,6 +52,7 @@
   .legend .l-focus { background: var(--focus); }
   .legend .l-dorm  { background: #b7bdc7; }
   .legend .l-out   { background: #fff; border: 1px dashed #b7bdc7; }
+  .legend .l-rev   { background: #0f9d76; }
 
   section { margin-bottom: 46px; }
   section:last-child { margin-bottom: 0; }
@@ -102,6 +103,7 @@
   .sub.dormant  { background: #f2f4f7; color: #9aa2ae; border-left-color: #dfe3e8 !important; box-shadow: none; }
   .sub.focus    { background: #fffaf2; border-left-color: var(--focus) !important; color: #92400e; font-weight: 500; }
   .sub.out      { background: #fff; border: 1px dashed #cbd1d9; border-left: 3px dashed #cbd1d9 !important; color: #9aa2ae; box-shadow: none; }
+  .sub.rev      { background: #f0fbf7; border-left-color: #0f9d76 !important; color: #0b5b47; font-weight: 500; }
 
   /* drawer */
   #drawer {
@@ -118,6 +120,8 @@
   #drawer .badge.dormant { background: #f2f4f7; color: #667085; }
   #drawer .badge.focus   { background: #fef3e2; color: var(--focus); }
   #drawer .badge.out     { background: #f2f4f7; color: #667085; }
+  #drawer .badge.rev     { background: #e6f7f1; color: #0f9d76; }
+  #drawer p.was          { font-size: 13.5px; line-height: 1.55; color: #667085; margin: 0; }
   #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
   #drawer .qlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 20px 0 10px; }
   #drawer p.opener { font-size: 14px; line-height: 1.55; font-weight: 600; color: var(--body); margin: 0; }
@@ -274,6 +278,10 @@
   <!-- ═════════════ VENUES ═════════════ -->
   <div class="panel" id="venues">
 
+    <div class="legend">
+      <span><i class="l-rev"></i>Changed in review. Click any green box for its previous wording.</span>
+    </div>
+
     <section>
       <div class="sec-head client-scope">
         <span class="pip"></span><h2>Client-based</h2>
@@ -292,11 +300,11 @@
         </div>
 
         <div class="col">
-          <div class="head" data-note="First contact. The first real question is always whether the date is free.">Enquiry</div>
+          <div class="head" data-note="First contact. Most couples arrive with a date range in mind rather than one fixed date, so the job is to steer the enquiry onto a date the venue can actually sell." data-was="First contact. The first real question is always whether the date is free.">Enquiry</div>
           <div class="sub" data-note="Arrives via directories, the website form, DM or phone. Several inboxes, easy to lose one.">Capture the enquiry</div>
-          <div class="sub" data-note="Couples enquire at several venues the same day. The first good answer usually wins the tour.">Reply fast — the date is the prize</div>
-          <div class="sub" data-note="Nothing else matters if the date is gone. It should be answered in the first reply, not the third.">Check the date is free</div>
-          <div class="sub" data-note="Date, guest count and budget decide whether this is real. Without them the tour is wasted.">Qualify: date, guest count, budget</div>
+          <div class="sub rev" data-state="rev" data-note="Couples enquire at several venues the same day. The first good answer usually wins the tour." data-was="Reply fast — the date is the prize">Reply fast — the enquiry is the prize</div>
+          <div class="sub rev" data-state="rev" data-note="A full diary on their first choice is not a lost enquiry. Most couples are flexible inside a range, so the first reply should offer what is open near it rather than just confirm what is not." data-was="Check the date is free. Nothing else matters if the date is gone. It should be answered in the first reply, not the third.">Guide them to an available date</div>
+          <div class="sub rev" data-state="rev" data-note="A date range, a guest count and a budget decide whether this is real. Without them the tour is wasted." data-was="Qualify: date, guest count, budget">Qualify: date range, guest count, budget</div>
           <div class="sub" data-note="The only goal of this stage. An enquiry with no tour booked is effectively a dead enquiry.">Book the tour</div>
         </div>
 
@@ -306,7 +314,7 @@
           <div class="sub" data-note="Walking the space, answering questions, reading the couple. The owner's real skill.">Run the tour</div>
           <div class="sub" data-note="What they liked, what worried them, how likely they are. With no outcome recorded, follow-up is guesswork.">Record the outcome</div>
           <div class="sub" data-note="Couples decide quickly after touring several venues. After a few days you have been forgotten.">Follow up within 24 hours</div>
-          <div class="sub" data-note="A short courtesy hold creates urgency and protects the date. Needs an expiry or it clogs the calendar.">Soft-hold the date</div>
+          <div class="sub rev" data-state="rev" data-note="The date stays available until someone signs. Venues create urgency by telling a lead there is other interest in the date, not by taking it off the market for them." data-was="Soft-hold the date. A short courtesy hold creates urgency and protects the date. Needs an expiry or it clogs the calendar.">Make them aware of other interest</div>
         </div>
 
         <div class="col">
@@ -319,19 +327,19 @@
         </div>
 
         <div class="col">
-          <div class="head" data-note="The long middle: 12 to 24 months of detail, meetings and instalments.">Plan</div>
+          <div class="head" data-note="The long middle: 12 to 24 months of detail, meetings and instalments, ending with the headcount and the roster locking about a week before the date." data-was="The long middle: 12 to 24 months of detail, meetings and instalments.">Plan</div>
           <div class="sub" data-note="Scheduled sessions spread across a year. The main touchpoint with the couple.">Planning meetings</div>
           <div class="sub" data-note="Proactive contact at fixed points before the date. Almost always missing, and badly missed.">Milestone check-ins</div>
           <div class="sub" data-note="Details that arrive late and keep changing, yet drive staffing, layout and setup.">Collect guest count, layout, timeline</div>
           <div class="sub" data-note="Caterer, florist, DJ, photographer. The venue is the hub even when it does not hire them.">Coordinate outside vendors</div>
+          <div class="sub rev" data-state="rev" data-note="Usually started about 30 days out and finalised about a week before the date. The day depends on it, but the work of building it happens here, in planning." data-was="This sat under Event day, described as the final numbers locked days before.">Final headcount and run sheet</div>
+          <div class="sub rev" data-state="rev" data-note="Coordinated well in advance rather than on the day. Right people, right hours, no gaps, and usually the biggest variable cost of the event." data-was="This sat under Event day, as though it were a day-of task.">Staff the day</div>
           <div class="sub" data-note="Money arrives in stages across months. A missed instalment is usually noticed far too late.">Payment instalments</div>
           <div class="sub" data-note="Rare, high-stakes, and governed entirely by whatever the contract happened to say.">Date changes and cancellations</div>
         </div>
 
         <div class="col">
-          <div class="head" data-note="One day, no second chance, and the heaviest staffing of the whole cycle.">Event day</div>
-          <div class="sub" data-note="The final numbers, locked days before. Everything on the day depends on getting this right.">Final headcount and run sheet</div>
-          <div class="sub" data-note="Right people, right hours, no gaps. Usually the biggest variable cost of the event.">Staff the day</div>
+          <div class="head" data-note="One day, no second chance. The numbers and the roster are already locked, so this is execution against a clock that cannot move." data-was="One day, no second chance, and the heaviest staffing of the whole cycle.">Event day</div>
           <div class="sub" data-note="Hours of work before guests arrive, against a fixed clock that cannot move.">Setup</div>
           <div class="sub" data-note="Live problem-solving. Nothing here can be rescheduled or done again tomorrow.">Run the event</div>
           <div class="sub" data-note="Breaking down tables, chairs, linens and decor once guests leave, clearing rubbish and cleaning the space. Usually done the same night or early next morning, because another booking may be in the following day.">Teardown</div>
@@ -490,7 +498,7 @@
           <div class="sub dormant" data-state="dormant"
             data-note="Named by Jose as a specific gap — 'did you receive the package, do you have questions'."
             data-questions="What did you send after a tour?|Who wrote it — you, or a template?|How many times would you follow up before giving up?">Follow up within 24 hours</div>
-          <div class="sub dormant" data-state="dormant" data-note="Not applicable while there is no calendar to hold.">Soft-hold the date</div>
+          <div class="sub dormant" data-state="dormant" data-note="Not applicable while there is no date to sell. Even with a venue, the date would stay available until someone signs, so urgency comes from naming the other interest rather than holding it." data-was="Soft-hold the date. Not applicable while there is no calendar to hold.">Make them aware of other interest</div>
         </div>
 
         <div class="col">
@@ -531,6 +539,14 @@
             data-note="Harder than before: every wedding is now at a different third-party venue with its own rules and contacts."
             data-questions="Roughly how many vendors per wedding?|Do you contact them, or does the couple?|Does each host venue impose its own vendor rules?|What breaks most often in vendor coordination?">Coordinate outside vendors</div>
           <div class="sub"
+            data-note="Not confirmed how this is tracked now that events are off-site. Typically started about 30 days out and finalised about a week before, so it is planning work rather than day-of work."
+            data-was="This sat under Event day."
+            data-questions="Who builds the run sheet?|What format — document, spreadsheet, message thread?|How late do the numbers still move?">Final headcount and run sheet</div>
+          <div class="sub"
+            data-note="Not confirmed how staffing works for off-site events. Normally coordinated well in advance rather than on the day."
+            data-was="This sat under Event day."
+            data-questions="Who works an event now — your own staff or the host venue's?|How far ahead do you know who's working?">Staff the day</div>
+          <div class="sub"
             data-note="HoneyBook sends standard payment-due notifications. This is the only automation actually live today."
             data-questions="What's the payment schedule — deposit, then what?|Does HoneyBook chase automatically, or does someone do it manually?|Have any of the 11 fallen behind?|Would you want to be told the moment one goes overdue?">Payment instalments</div>
           <div class="sub"
@@ -542,12 +558,6 @@
           <div class="head"
             data-note="Live, but off-site. Vignette is effectively the producer at someone else's venue rather than the host."
             data-questions="How different is running a wedding at someone else's venue?|How many of the 11 have already happened?|What's gone wrong at the off-site ones so far?">Event day</div>
-          <div class="sub"
-            data-note="Not confirmed how this is tracked now that events are off-site."
-            data-questions="Who builds the run sheet?|What format — document, spreadsheet, message thread?|How late do the numbers still move?">Final headcount and run sheet</div>
-          <div class="sub"
-            data-note="Not confirmed how staffing works for off-site events."
-            data-questions="Who works an event now — your own staff or the host venue's?|How far ahead do you know who's working?">Staff the day</div>
           <div class="sub" data-note="Now constrained by each host venue's access times rather than their own."
             data-questions="How much setup access do host venues give you?">Setup</div>
           <div class="sub"
@@ -699,6 +709,10 @@
   <h3></h3>
   <div class="badge-slot"></div>
   <p class="note"></p>
+  <div class="rwrap" hidden>
+    <div class="qlabel">Changed from</div>
+    <p class="was"></p>
+  </div>
   <div class="owrap" hidden>
     <div class="qlabel">Open with</div>
     <p class="opener"></p>
@@ -722,6 +736,8 @@
   var title  = drawer.querySelector('h3');
   var badges = drawer.querySelector('.badge-slot');
   var note   = drawer.querySelector('p.note');
+  var rwrap  = drawer.querySelector('.rwrap');
+  var was    = drawer.querySelector('p.was');
   var owrap  = drawer.querySelector('.owrap');
   var opener = drawer.querySelector('p.opener');
   var wlabel = drawer.querySelector('.wlabel');
@@ -732,7 +748,7 @@
   var qlist  = drawer.querySelector('ul.qlist');
   var current = null;
 
-  var STATE_TEXT = { dormant: 'Dormant', focus: 'Focus now', out: 'Out of scope' };
+  var STATE_TEXT = { dormant: 'Dormant', focus: 'Focus now', out: 'Out of scope', rev: 'Changed in review' };
 
   function close() {
     drawer.classList.remove('open');
@@ -764,6 +780,10 @@
     }
 
     note.textContent = el.dataset.note || '';
+
+    var wasText = (el.dataset.was || '').trim();
+    was.textContent = wasText;
+    rwrap.hidden = !wasText;
 
     var openerText = (el.dataset.opener || '').trim();
     opener.textContent = openerText;
