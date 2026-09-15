@@ -120,6 +120,12 @@
   #drawer .badge.out     { background: #f2f4f7; color: #667085; }
   #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
   #drawer .qlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 20px 0 10px; }
+  #drawer p.opener { font-size: 14px; line-height: 1.55; font-weight: 600; color: var(--body); margin: 0; }
+  #drawer .wlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 14px 0 8px; }
+  #drawer ul.wlist { margin: 0; padding-left: 18px; }
+  #drawer ul.wlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 7px; }
+  #drawer ul.tlist { margin: 0; padding-left: 18px; }
+  #drawer ul.tlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 9px; }
   #drawer ul.qlist { margin: 0; padding-left: 18px; }
   #drawer ul.qlist li { font-size: 13.5px; line-height: 1.5; color: var(--body); margin-bottom: 9px; }
   #drawer .x {
@@ -688,6 +694,16 @@
   <h3></h3>
   <div class="badge-slot"></div>
   <p class="note"></p>
+  <div class="owrap" hidden>
+    <div class="qlabel">Open with</div>
+    <p class="opener"></p>
+    <div class="wlabel" hidden>Watch for</div>
+    <ul class="wlist"></ul>
+  </div>
+  <div class="twrap" hidden>
+    <div class="qlabel">Top questions</div>
+    <ul class="tlist"></ul>
+  </div>
   <div class="qwrap" hidden>
     <div class="qlabel">Questions for Jose</div>
     <ul class="qlist"></ul>
@@ -701,6 +717,12 @@
   var title  = drawer.querySelector('h3');
   var badges = drawer.querySelector('.badge-slot');
   var note   = drawer.querySelector('p.note');
+  var owrap  = drawer.querySelector('.owrap');
+  var opener = drawer.querySelector('p.opener');
+  var wlabel = drawer.querySelector('.wlabel');
+  var wlist  = drawer.querySelector('ul.wlist');
+  var twrap  = drawer.querySelector('.twrap');
+  var tlist  = drawer.querySelector('ul.tlist');
   var qwrap  = drawer.querySelector('.qwrap');
   var qlist  = drawer.querySelector('ul.qlist');
   var current = null;
@@ -738,6 +760,27 @@
 
     note.textContent = el.dataset.note || '';
 
+    var openerText = (el.dataset.opener || '').trim();
+    opener.textContent = openerText;
+    wlist.innerHTML = '';
+    var ws = (el.dataset.watch || '').split('|').map(function (w) { return w.trim(); }).filter(Boolean);
+    ws.forEach(function (w) {
+      var wi = document.createElement('li');
+      wi.textContent = w;
+      wlist.appendChild(wi);
+    });
+    wlabel.hidden = ws.length === 0;
+    owrap.hidden = !openerText && ws.length === 0;
+
+    tlist.innerHTML = '';
+    var ts = (el.dataset.top || '').split('|').map(function (t) { return t.trim(); }).filter(Boolean);
+    ts.forEach(function (t) {
+      var ti = document.createElement('li');
+      ti.textContent = t;
+      tlist.appendChild(ti);
+    });
+    twrap.hidden = ts.length === 0;
+
     qlist.innerHTML = '';
     var qs = (el.dataset.questions || '').split('|').map(function (q) { return q.trim(); }).filter(Boolean);
     qs.forEach(function (q) {
@@ -756,7 +799,7 @@
     if (e.target.closest('#drawer .x')) { close(); return; }
     if (e.target.closest('#drawer')) return;
 
-    var box = e.target.closest('[data-note], [data-questions]');
+    var box = e.target.closest('[data-note], [data-questions], [data-opener], [data-top]');
     if (box) { open(box); return; }
 
     var tab = e.target.closest('.tab');
