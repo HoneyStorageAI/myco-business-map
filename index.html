@@ -52,6 +52,7 @@
   .legend .l-focus { background: var(--focus); }
   .legend .l-dorm  { background: #b7bdc7; }
   .legend .l-out   { background: #fff; border: 1px dashed #b7bdc7; }
+  .legend .l-rev   { background: #0f9d76; }
 
   section { margin-bottom: 46px; }
   section:last-child { margin-bottom: 0; }
@@ -102,6 +103,7 @@
   .sub.dormant  { background: #f2f4f7; color: #9aa2ae; border-left-color: #dfe3e8 !important; box-shadow: none; }
   .sub.focus    { background: #fffaf2; border-left-color: var(--focus) !important; color: #92400e; font-weight: 500; }
   .sub.out      { background: #fff; border: 1px dashed #cbd1d9; border-left: 3px dashed #cbd1d9 !important; color: #9aa2ae; box-shadow: none; }
+  .sub.rev      { background: #f0fbf7; border-left-color: #0f9d76 !important; color: #0b5b47; font-weight: 500; }
 
   /* drawer */
   #drawer {
@@ -118,6 +120,8 @@
   #drawer .badge.dormant { background: #f2f4f7; color: #667085; }
   #drawer .badge.focus   { background: #fef3e2; color: var(--focus); }
   #drawer .badge.out     { background: #f2f4f7; color: #667085; }
+  #drawer .badge.rev     { background: #e6f7f1; color: #0f9d76; }
+  #drawer p.was          { font-size: 13.5px; line-height: 1.55; color: #667085; margin: 0; }
   #drawer p.note { font-size: 14px; line-height: 1.6; color: var(--body); margin: 0; }
   #drawer .qlabel { font-size: 11px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); margin: 20px 0 10px; }
   #drawer p.opener { font-size: 14px; line-height: 1.55; font-weight: 600; color: var(--body); margin: 0; }
@@ -273,6 +277,10 @@
 
   <!-- ═════════════ VENUES ═════════════ -->
   <div class="panel" id="venues">
+
+    <div class="legend">
+      <span><i class="l-rev"></i>Changed in review — click to see the previous wording</span>
+    </div>
 
     <section>
       <div class="sec-head client-scope">
@@ -699,6 +707,10 @@
   <h3></h3>
   <div class="badge-slot"></div>
   <p class="note"></p>
+  <div class="rwrap" hidden>
+    <div class="qlabel">Changed from</div>
+    <p class="was"></p>
+  </div>
   <div class="owrap" hidden>
     <div class="qlabel">Open with</div>
     <p class="opener"></p>
@@ -722,6 +734,8 @@
   var title  = drawer.querySelector('h3');
   var badges = drawer.querySelector('.badge-slot');
   var note   = drawer.querySelector('p.note');
+  var rwrap  = drawer.querySelector('.rwrap');
+  var was    = drawer.querySelector('p.was');
   var owrap  = drawer.querySelector('.owrap');
   var opener = drawer.querySelector('p.opener');
   var wlabel = drawer.querySelector('.wlabel');
@@ -732,7 +746,7 @@
   var qlist  = drawer.querySelector('ul.qlist');
   var current = null;
 
-  var STATE_TEXT = { dormant: 'Dormant', focus: 'Focus now', out: 'Out of scope' };
+  var STATE_TEXT = { dormant: 'Dormant', focus: 'Focus now', out: 'Out of scope', rev: 'Changed in review' };
 
   function close() {
     drawer.classList.remove('open');
@@ -764,6 +778,10 @@
     }
 
     note.textContent = el.dataset.note || '';
+
+    var wasText = (el.dataset.was || '').trim();
+    was.textContent = wasText;
+    rwrap.hidden = !wasText;
 
     var openerText = (el.dataset.opener || '').trim();
     opener.textContent = openerText;
